@@ -27,7 +27,6 @@ public class AuthenticationService {
         UserEntity user = new UserEntity();
         user.setUsername(input.getUsername());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
-
         return userRepository.save(user);
     }
 
