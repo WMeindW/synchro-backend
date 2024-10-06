@@ -24,9 +24,12 @@ public class AuthenticationService {
     }
 
     public UserEntity signup(RegisterUserDto input) {
+        if (userRepository.findByUsername(input.getUsername()).isPresent())
+            throw new RuntimeException("User already exists");
         UserEntity user = new UserEntity();
         user.setUsername(input.getUsername());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
+
         return userRepository.save(user);
     }
 
