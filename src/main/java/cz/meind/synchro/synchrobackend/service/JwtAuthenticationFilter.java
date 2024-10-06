@@ -37,26 +37,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // Extract the JWT token from cookies
             String jwt = extractTokenFromCookies(request);
+
+            // Check if the JWT token is present
             if (jwt != null) {
                 final String userEmail = jwtService.extractUsername(jwt);
-
                 if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
+                    // Validate the JWT token
                     if (jwtService.isTokenValid(jwt, userDetails)) {
+                        // Set authentication in the security context
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
+                        String requestURI = request.getRequestURI();
+                        if (requestURI.equals("/login.html") || requestURI.equals("/signup.html")) {
+                            response.sendRedirect("/index.html");
+                            return; // Prevent further processing
+                        }
                     }
                 }
             }
 
+            // If no JWT is present, continue to the requested resource
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }
+
 
     /**
      * Extracts the JWT token from cookies in the request.
