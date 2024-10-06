@@ -1,4 +1,4 @@
-package cz.meind.synchro.synchrobackend.config;
+package cz.meind.synchro.synchrobackend.handler;
 
 
 import org.springframework.security.core.AuthenticationException;

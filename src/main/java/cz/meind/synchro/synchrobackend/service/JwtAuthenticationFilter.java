@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         String requestURI = request.getRequestURI();
                         if (requestURI.equals("/login.html") || requestURI.equals("/signup.html")) {
                             response.sendRedirect("/index.html");
-                            return; // Prevent further processing
+                            return;
                         }
                     }
                 }

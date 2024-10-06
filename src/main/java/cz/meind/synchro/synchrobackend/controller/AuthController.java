@@ -9,10 +9,7 @@ import cz.meind.synchro.synchrobackend.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -55,7 +52,7 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         // Clear the JWT token by setting the cookie Max-Age to 0
         Cookie jwtCookie = new Cookie("token", null);
@@ -67,6 +64,6 @@ public class AuthController {
         // Add the cookie to the response to clear it on the client side
         response.addCookie(jwtCookie);
 
-        return ResponseEntity.ok("Logged out successfully");
+        return ResponseEntity.ok("Logout successful");
     }
 }

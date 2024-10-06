@@ -67,12 +67,12 @@
 
         <input type="submit" value="Signup">
     </form>
-
+    <a href="/login.html">Login</a>
     <div class="error-message" id="error-message"></div>
 </div>
 
 <script>
-    document.getElementById('signup-form').addEventListener('submit', async function(event) {
+    document.getElementById('signup-form').addEventListener('submit', async function (event) {
         event.preventDefault();
 
         const username = document.getElementById('username').value;

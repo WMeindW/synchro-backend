@@ -67,7 +67,7 @@
 
         <input type="submit" value="Login">
     </form>
-
+    <a href="/signup.html">Signup</a>
     <div class="error-message" id="error-message"></div>
 </div>
 
@@ -92,7 +92,8 @@
 
             if (response.ok) {
                 const data = await response.json();
-                alert(`Login successful! Token: ${data.token}`);
+                window.location.replace("http://localhost:8083/");
+
                 // Optionally, you can store the token in localStorage or a cookie for future use
                 // localStorage.setItem('token', data.token);
             } else {

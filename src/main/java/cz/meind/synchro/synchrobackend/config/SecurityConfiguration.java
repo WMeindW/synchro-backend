@@ -1,5 +1,7 @@
 package cz.meind.synchro.synchrobackend.config;
 
+import cz.meind.synchro.synchrobackend.handler.CustomAccessDeniedHandler;
+import cz.meind.synchro.synchrobackend.handler.CustomAuthenticationEntryPoint;
 import cz.meind.synchro.synchrobackend.service.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,30 +23,22 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
-                                 AuthenticationProvider authenticationProvider,
-                                 CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/login.html", "/signup.html").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint) // Set the custom entry point
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable().authorizeHttpRequests().requestMatchers("/auth/**", "/login.html", "/signup.html", "/favicon.ico").permitAll() // Allow these routes
+                .anyRequest().authenticated() // Authenticate other requests
+                .and().exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint) // Handle 401
+                .accessDeniedHandler(customAccessDeniedHandler) // Handle 403
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
