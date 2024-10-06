@@ -8,6 +8,7 @@ import cz.meind.synchro.synchrobackend.service.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,5 +66,10 @@ public class AuthController {
         response.addCookie(jwtCookie);
 
         return ResponseEntity.ok("Logout successful");
+    }
+
+    @GetMapping("/file")
+    public ResponseEntity<?> file() {
+        return new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 }

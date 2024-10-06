@@ -36,8 +36,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests().requestMatchers("/auth/**", "/login.html", "/signup.html", "/favicon.ico").permitAll() // Allow these routes
                 .anyRequest().authenticated() // Authenticate other requests
-                .and().exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint) // Handle 401
-                .accessDeniedHandler(customAccessDeniedHandler) // Handle 403
+                .and().exceptionHandling()
+                .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(customAuthenticationEntryPoint) // Handle 401
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

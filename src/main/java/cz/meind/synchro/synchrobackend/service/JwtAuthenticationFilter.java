@@ -17,6 +17,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -35,6 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
+
+
+            // Check if the request is a POST request with the "Authorization" header
             // Extract the JWT token from cookies
             String jwt = extractTokenFromCookies(request);
 
@@ -61,6 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // If no JWT is present, continue to the requested resource
             filterChain.doFilter(request, response);
+            System.out.println(response.getStatus());
         } catch (Exception exception) {
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
