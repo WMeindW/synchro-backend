@@ -28,5 +28,10 @@ public class RoleEntity {
     public RoleEntity() {
 
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 

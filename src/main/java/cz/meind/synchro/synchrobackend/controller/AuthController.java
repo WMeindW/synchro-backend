@@ -30,21 +30,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginUserDto request, HttpServletResponse response) {// The token is in the "token" field
+    public ResponseEntity<?> login(@RequestBody LoginUserDto request, HttpServletResponse response) {
         Optional<LoginResponse> login = authService.login(request);
         if (login.isEmpty()) return ResponseEntity.status(409).body("Error occurred while logging in.");
         else {
             Cookie cookie = new Cookie("jwt", login.get().getToken());
             cookie.setHttpOnly(true);
-            cookie.setMaxAge((int) login.get().getExpiresIn()); // Expire the cookie
+            cookie.setMaxAge((int) login.get().getExpiresIn());
             cookie.setPath("/");
-            // Add the expired cookie to the response
             response.addCookie(cookie);
             return ResponseEntity.ok(login.get());
         }
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         // Create an expired cookie to effectively "logout" the user
         Cookie cookie = new Cookie("jwt", null);

@@ -92,7 +92,7 @@
 
             if (response.ok) {
                 const data = await response.json();
-                window.location.replace("http://localhost:8083/");
+                alert('success: ' + JSON.stringify(data));
 
                 // Optionally, you can store the token in localStorage or a cookie for future use
                 // localStorage.setItem('token', data.token);

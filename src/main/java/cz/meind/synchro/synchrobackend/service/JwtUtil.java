@@ -27,7 +27,7 @@ public class JwtUtil {
     }
 
     // Generate JWT token with additional claims
-    public String generateToken(String username, Map<String, Object> extraClaims) {
+    public String generateToken(String username, Map<String, String> extraClaims) {
         return Jwts.builder().setClaims(extraClaims)  // Set extra claims
                 .setSubject(username).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + expirationTime)).signWith(getSigningKey(), SignatureAlgorithm.HS256)  // Use new signWith method
                 .compact();

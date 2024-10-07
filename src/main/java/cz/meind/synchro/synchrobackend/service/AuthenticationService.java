@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -19,12 +21,19 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    private final JwtUtil jwtUtil;
+
     @Value("${security.jwt.default-role}")
     private String defaultRole;
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository) {
+    @Value("${security.jwt.expiration-time}")
+    private long expirationTime;
+
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     private boolean usernameExists(String username) {
@@ -34,7 +43,8 @@ public class AuthenticationService {
     public boolean signup(RegisterUserDto registerUserDto) {
         if (usernameExists(registerUserDto.getUsername())) return false;
         //if (!validateUsername(registerUserDto.getUsername())) return false;
-        if (roleRepository.findRoleEntityByName(defaultRole).isEmpty()) roleRepository.save(new RoleEntity(defaultRole));
+        if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
+            roleRepository.save(new RoleEntity(defaultRole));
         UserEntity user = new UserEntity();
         user.setUsername(registerUserDto.getUsername());
         user.setPassword(hashPassword(registerUserDto.getPassword()));
@@ -48,7 +58,17 @@ public class AuthenticationService {
     }
 
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
-        // TODO: Implement login logic
+        if (!usernameExists(loginUserDto.getUsername())) return Optional.empty();
+        //if (!validateUsername(loginUserDto.getUsername())) return Optional.empty();
+        UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
+        if (user.getPassword().equals(hashPassword(loginUserDto.getPassword()))) {
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setToken(generateToken(user));
+            loginResponse.setExpiresIn(expirationTime);
+            loginResponse.setRole(user.getRole().toString());
+            System.out.println(jwtUtil.extractClaims(loginResponse.getToken()));
+            return Optional.of(loginResponse);
+        }
         return Optional.empty();
     }
 
@@ -70,5 +90,11 @@ public class AuthenticationService {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
         }
+    }
+
+    private String generateToken(UserEntity user) {
+        Map<String, String> claims = new HashMap<>();
+        claims.put("role", user.getRole().toString());
+        return jwtUtil.generateToken(user.getUsername(), claims);
     }
 }
