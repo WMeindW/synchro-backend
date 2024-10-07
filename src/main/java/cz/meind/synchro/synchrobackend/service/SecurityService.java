@@ -1,6 +1,5 @@
 package cz.meind.synchro.synchrobackend.service;
 
-import cz.meind.synchro.synchrobackend.database.repositories.RoleRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +12,7 @@ public class SecurityService {
 
     private final JwtUtil jwtUtil;
 
-    public SecurityService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil) {
+    public SecurityService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }
@@ -28,7 +27,12 @@ public class SecurityService {
             }
         }
         if (cookie == null) return false;
-        return validateToken(cookie.getValue(), role);
+        try {
+            return validateToken(cookie.getValue(), role);
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     private boolean validateToken(String token, String role) {
