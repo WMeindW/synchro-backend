@@ -34,7 +34,7 @@ public class AuthController {
         Optional<LoginResponse> login = authService.login(request);
         if (login.isEmpty()) return ResponseEntity.status(409).body("Error occurred while logging in.");
         else {
-            Cookie cookie = new Cookie("jwt", login.get().getToken());
+            Cookie cookie = new Cookie("token", login.get().getToken());
             cookie.setHttpOnly(true);
             cookie.setMaxAge((int) login.get().getExpiresIn());
             cookie.setPath("/");
@@ -46,7 +46,7 @@ public class AuthController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         // Create an expired cookie to effectively "logout" the user
-        Cookie cookie = new Cookie("jwt", null);
+        Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0); // Expire the cookie
         cookie.setPath("/");

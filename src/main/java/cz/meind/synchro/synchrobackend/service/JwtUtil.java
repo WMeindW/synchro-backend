@@ -40,9 +40,8 @@ public class JwtUtil {
     }
 
     // Validate JWT token
-    public boolean isTokenValid(String token, String username) {
-        String tokenUsername = extractClaims(token).getSubject();
-        return username.equals(tokenUsername) && !isTokenExpired(token);
+    public boolean isTokenValid(String token) {
+        return !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
