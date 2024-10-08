@@ -7,6 +7,7 @@ import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.LoginUserDto;
 import cz.meind.synchro.synchrobackend.dto.RegisterUserDto;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,10 +31,26 @@ public class AuthenticationService {
     @Value("${security.jwt.expiration-time}")
     private long expirationTime;
 
+    @Value("${security.jwt.admin-username:admin_user}")
+    private String adminUsername;
+
+    @Value("${security.jwt.admin-password}")
+    private String adminPassword;
+
     public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtil = jwtUtil;
+    }
+
+    @PostConstruct
+    private void initializeAdmin() {
+        if (userRepository.findByUsername(adminUsername).isEmpty()) {
+            if (roleRepository.findRoleEntityByName("ADMIN").isEmpty()) {
+                roleRepository.save(new RoleEntity("ADMIN"));
+            }
+            userRepository.save(new UserEntity(roleRepository.findRoleEntityByName("ADMIN").get(), hashPassword(adminPassword), adminUsername));
+        }
     }
 
     private boolean usernameExists(String username) {
@@ -42,7 +59,7 @@ public class AuthenticationService {
 
     public boolean signup(RegisterUserDto registerUserDto) {
         if (usernameExists(registerUserDto.getUsername())) return false;
-        //if (!validateUsername(registerUserDto.getUsername())) return false;
+        if (validateUsername(registerUserDto.getUsername())) return false;
         if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
             roleRepository.save(new RoleEntity(defaultRole));
         UserEntity user = new UserEntity();
@@ -54,12 +71,12 @@ public class AuthenticationService {
     }
 
     private boolean validateUsername(String username) {
-        return username.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+        return !username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
 
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
         if (!usernameExists(loginUserDto.getUsername())) return Optional.empty();
-        //if (!validateUsername(loginUserDto.getUsername())) return Optional.empty();
+        if (validateUsername(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
         if (user.getPassword().equals(hashPassword(loginUserDto.getPassword()))) {
             LoginResponse loginResponse = new LoginResponse();

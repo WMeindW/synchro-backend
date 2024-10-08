@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-import java.util.Collection;
 import java.util.Objects;
 
 @Setter
@@ -13,7 +12,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "users")
 public class UserEntity {
-    // Getters and Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,8 +23,14 @@ public class UserEntity {
     private String password;
 
     @ManyToOne()
-    @JoinColumn(name="role_id", nullable=false)
+    @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
+
+    public UserEntity(RoleEntity role, String password, String username) {
+        this.role = role;
+        this.password = password;
+        this.username = username;
+    }
 
     // Constructors
     public UserEntity() {

@@ -3,6 +3,7 @@ package cz.meind.synchro.synchrobackend.service;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -45,13 +45,11 @@ public class AuthController {
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        // Create an expired cookie to effectively "logout" the user
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0); // Expire the cookie
         cookie.setPath("/");
 
-        // Add the expired cookie to the response
         response.addCookie(cookie);
 
         return ResponseEntity.ok("Logout successful");
