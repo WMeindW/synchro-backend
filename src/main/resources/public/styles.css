@@ -6,16 +6,25 @@
     font-weight: 400;
     font-style: normal;}
 
-body {
+.body-login {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #BFDBF7, #1F7A8C, #053C5E);
+    background: linear-gradient(135deg, #BFDBF7, #1F7A8C, #043C5E);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
 }
 
+.body-signup {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #DFD5A5, #1F7A8C, #043C5E);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
 @keyframes gradientShift {
     0% {
         background-position: 0 50%;
@@ -45,11 +54,26 @@ body {
     text-align: center;
 }
 
-h2 {
+.signup-box {
+    background-color: #043C5E;
+    padding: 30px 30px;
+    border-radius: 15px;
+    box-shadow: 12px 12px 2px 1px #DFD5A5;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.header-login {
     color: #BFDBF7;
     margin-bottom: 20px;
     font-size: 24px;
-    font-weight: bold;
+}
+
+.header-signup{
+    color: #DFD5A5;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
 
 .input-group {
@@ -94,6 +118,10 @@ button {
     transition: background-color 0.3s ease;
 }
 
+.signup{
+    background-color: #DFD5A5 !important;
+    color: #053C5E;
+}
 .error-message {
     color: #BEDBF7;
 }
