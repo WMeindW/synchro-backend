@@ -22,6 +22,6 @@ public class SecureController extends Controller {
 
     @GetMapping(value = "/index.html", produces = "text/html")
     public ResponseEntity<?> index(HttpServletRequest request, HttpServletResponse response) {
-        return super.handleRequests(request, response, controllerRole);
+        return super.handleRequestsSecureRedirect(request, response, controllerRole);
     }
 }

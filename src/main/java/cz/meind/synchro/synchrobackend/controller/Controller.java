@@ -23,10 +23,26 @@ public class Controller {
         this.securityService = securityService;
     }
 
-    protected ResponseEntity<?> handleRequests(HttpServletRequest request, HttpServletResponse response, String role){
+    protected ResponseEntity<?> handleRequestsSecureRedirect(HttpServletRequest request, HttpServletResponse response, String role) {
         if (!securityService.accessFilter(request, role)) {
             try {
-                response.sendRedirect("/login.html");
+                response.sendRedirect("/auth/login.html");
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        try {
+            return ResponseEntity.ok(Files.readAllBytes(Path.of(secureRoute + request.getRequestURI())));
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    protected ResponseEntity<?> handleRequestsUnsecureRedirect(HttpServletRequest request, HttpServletResponse response) {
+        if (securityService.accessFilter(request, "USER/ADMIN")) {
+            try {
+                response.sendRedirect("/user/index.html");
             } catch (IOException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

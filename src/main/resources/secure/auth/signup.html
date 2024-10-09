@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Signup Page</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth-styles.css">
 </head>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -19,7 +19,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://localhost:8083/auth/login', {
+                const response = await fetch('http://localhost:8083/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -33,7 +33,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     alert('success: ' + JSON.stringify(data));
-                    window.location.replace("http://localhost:8083/user/index.html");
+                    window.location.replace("http://localhost:8083/login.html");
                     // Optionally, you can store the token in localStorage or a cookie for future use
                     // localStorage.setItem('token', data.token);
                 } else {
@@ -47,10 +47,10 @@
     })
 
 </script>
-<body class="body-login">
+<body class="body-signup">
 <div class="login-container">
-    <div class="login-box">
-        <div class="header-login">Login</div>
+    <div class="signup-box">
+        <div class="header-login">Signup</div>
         <form id="login-form">
             <div class="input-group">
                 <label for="username"></label>
@@ -60,9 +60,9 @@
                 <label for="password"></label>
                 <input type="password" placeholder="Password" id="password" name="password" required>
             </div>
-            <button type="submit">Login</button>
+            <button class="signup" type="submit">Signup</button>
             <div class="redirect-box">
-                <a href="/signup.html">Signup</a>
+                <a href="login.html">Login</a>
             </div>
             <div class="error-message" id="error-message"></div>
         </form>

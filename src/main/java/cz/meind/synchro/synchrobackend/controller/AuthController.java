@@ -4,6 +4,8 @@ import cz.meind.synchro.synchrobackend.dto.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.LoginUserDto;
 import cz.meind.synchro.synchrobackend.dto.RegisterUserDto;
 import cz.meind.synchro.synchrobackend.service.AuthenticationService;
+import cz.meind.synchro.synchrobackend.service.SecurityService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +16,29 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController extends Controller {
 
     private final AuthenticationService authService;
 
 
-    public AuthController(AuthenticationService authService) {
+    public AuthController(AuthenticationService authService, SecurityService securityService) {
+        super(securityService);
         this.authService = authService;
+    }
+
+    @GetMapping(value = "/login.html", produces = "text/html")
+    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response) {
+        return super.handleRequestsUnsecureRedirect(request, response);
+    }
+
+    @GetMapping(value = "/signup.html", produces = "text/html")
+    public ResponseEntity<?> register(HttpServletRequest request, HttpServletResponse response) {
+        return super.handleRequestsUnsecureRedirect(request, response);
+    }
+
+    @GetMapping(value = "/auth-styles.css", produces = "text/css")
+    public ResponseEntity<?> style(HttpServletRequest request, HttpServletResponse response) {
+        return super.handleRequestsUnsecureRedirect(request, response);
     }
 
     @PostMapping("/signup")
