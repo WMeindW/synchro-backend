@@ -26,7 +26,7 @@ public class Controller {
     protected ResponseEntity<?> handleRequestsSecureRedirect(HttpServletRequest request, HttpServletResponse response, String role) {
         if (!securityService.accessFilter(request, role)) {
             try {
-                response.sendRedirect("/auth/login.html");
+                response.sendRedirect("/synchro/api/auth/login.html");
             } catch (IOException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -40,9 +40,10 @@ public class Controller {
     }
 
     protected ResponseEntity<?> handleRequestsUnsecureRedirect(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println(secureRoute + request.getRequestURI());
         if (securityService.accessFilter(request, "USER/ADMIN")) {
             try {
-                response.sendRedirect("/user/index.html");
+                response.sendRedirect("/synchro/api/user/index.html");
             } catch (IOException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

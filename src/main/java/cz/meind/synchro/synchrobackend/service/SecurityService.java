@@ -3,7 +3,6 @@ package cz.meind.synchro.synchrobackend.service;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,6 +21,7 @@ public class SecurityService {
         Cookie cookie = null;
         if (request.getCookies() == null) return false;
         for (Cookie c : request.getCookies()) {
+            System.out.println(c.getName() + "=" + c.getValue());
             if (c.getName().equals("token")) {
                 cookie = c;
                 break;
