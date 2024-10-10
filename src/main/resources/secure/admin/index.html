@@ -17,11 +17,15 @@
     <label for="role">Role:</label>
     <input type="text" id="role" name="role" required><br><br>
 
+    <label>
+        <textarea id="link"></textarea>
+    </label>
+
     <button type="submit">Create User</button>
 </form>
 
 <script>
-    document.getElementById('createUserForm').addEventListener('submit', function(event) {
+    document.getElementById('createUserForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Zabráníme odeslání formuláře
 
         // Získání hodnot z formuláře
@@ -46,8 +50,7 @@
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
-                alert('User created successfully!');
+                document.getElementById('link').value = data["token"];
             })
             .catch((error) => {
                 console.error('Error:', error);

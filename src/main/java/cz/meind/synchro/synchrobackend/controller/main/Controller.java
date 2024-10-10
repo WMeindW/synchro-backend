@@ -25,7 +25,7 @@ public class Controller {
     public Controller(SecurityService securityService) {
         this.securityService = securityService;
     }
-
+    //Ass kod
     protected ResponseEntity<?> handleRequestsSecureRedirect(HttpServletRequest request, HttpServletResponse response, String role) {
         if (!securityService.accessFilter(request, role)) {
             try {

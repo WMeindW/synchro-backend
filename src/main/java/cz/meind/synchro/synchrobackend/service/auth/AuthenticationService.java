@@ -56,19 +56,21 @@ public class AuthenticationService {
 
     @PostConstruct
     private void initializeAdmin() {
-        if (userRepository.findByUsername(adminUsername).isEmpty()) {
-            if (roleRepository.findRoleEntityByName("ADMIN").isEmpty()) {
-                roleRepository.save(new RoleEntity("ADMIN"));
-            }
-            userRepository.save(new UserEntity(adminUsername, validationUtil.hashPassword(adminPassword), true, roleRepository.findRoleEntityByName("ADMIN").get()));
-        }
+        if (userRepository.findByUsername(adminUsername).isPresent()) return;
+        if (roleRepository.findRoleEntityByName("ADMIN").isPresent()) return;
+        roleRepository.save(new RoleEntity("ADMIN"));
+        userRepository.save(new UserEntity(adminUsername, validationUtil.hashPassword(adminPassword), true, roleRepository.findRoleEntityByName("ADMIN").get()));
+
+    }
+
+    @PostConstruct
+    private void initializeUser() {
         if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
             roleRepository.save(new RoleEntity(defaultRole));
     }
 
-
     public boolean signup(RegisterUserDto registerUserDto) {
-        if (validationUtil.checkUserNotValid(registerUserDto.getUsername())) return false;
+        if (!validationUtil.signupCheck(registerUserDto.getUsername())) return false;
         if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject()))
             return false;
         userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, validationUtil.hashPassword(registerUserDto.getPassword()));
@@ -80,26 +82,16 @@ public class AuthenticationService {
         if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
         UserEntity user = new UserEntity(createUserDto.getUsername(), validationUtil.hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
-        LoginResponse response = new LoginResponse();
-        response.setToken(host + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
-        response.setExpiresIn(signupLinkExpires);
-        response.setRole(createUserDto.getRole());
-        return Optional.of(response);
+        return Optional.of(new LoginResponse(host + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires), signupLinkExpires, createUserDto.getRole()));
     }
 
 
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
-        if (validationUtil.checkUserNotValid(loginUserDto.getUsername())) return Optional.empty();
+        if (!validationUtil.loginCheck(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
-        if (user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) {
-            LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setToken(generateToken(user, expirationTime));
-            loginResponse.setExpiresIn(expirationTime);
-            loginResponse.setRole(user.getRole().toString());
-            System.out.println(jwtUtil.extractClaims(loginResponse.getToken()));
-            return Optional.of(loginResponse);
-        }
-        return Optional.empty();
+        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword())))
+            return Optional.empty();
+        return Optional.of(new LoginResponse(generateToken(user, expirationTime), expirationTime, user.getRole().toString()));
     }
 
 

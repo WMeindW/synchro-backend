@@ -22,7 +22,6 @@ public class SecurityService {
         Cookie cookie = null;
         if (request.getCookies() == null) return false;
         for (Cookie c : request.getCookies()) {
-            System.out.println(c.getName() + "=" + c.getValue());
             if (c.getName().equals("token")) {
                 cookie = c;
                 break;

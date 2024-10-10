@@ -12,9 +12,10 @@
 </head>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('username').value = urlParams.get('username')
         document.getElementById('login-form').addEventListener('submit', async function (event) {
             event.preventDefault();
-            const urlParams = new URLSearchParams(window.location.search);
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const token = urlParams.get('token')
@@ -53,7 +54,7 @@
         <form id="login-form">
             <div class="input-group">
                 <label for="username"></label>
-                <input type="text" placeholder="Username" id="username" name="username" required>
+                <input type="text" placeholder="Username" id="username" name="username" readonly style="background-color: lightgrey" required>
             </div>
             <div class="input-group">
                 <label for="password"></label>

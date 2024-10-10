@@ -27,7 +27,6 @@ public class AuthController extends Controller {
         this.authService = authService;
     }
 
-    // NEEEEEEEEEGR
     @GetMapping(value = "/login.html", produces = "text/html")
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response) {
         return super.handleRequestsUnsecureRedirect(request, response);
