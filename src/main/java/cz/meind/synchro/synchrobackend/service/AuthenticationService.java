@@ -29,6 +29,9 @@ public class AuthenticationService {
     @Value("${security.jwt.default-role}")
     private String defaultRole;
 
+    @Value("${security.jwt.host-address}")
+    private String host;
+
     @Value("${security.jwt.expiration-time}")
     private long expirationTime;
 
@@ -64,15 +67,9 @@ public class AuthenticationService {
     }
 
     public boolean signup(RegisterUserDto registerUserDto) {
-        if (usernameExists(registerUserDto.getUsername())) return false;
+        if (!usernameExists(registerUserDto.getUsername())) return false;
         if (validateUsername(registerUserDto.getUsername())) return false;
-        if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
-            roleRepository.save(new RoleEntity(defaultRole));
-        UserEntity user = new UserEntity();
-        user.setUsername(registerUserDto.getUsername());
-        user.setPassword(hashPassword(registerUserDto.getPassword()));
-        user.setRole(roleRepository.findRoleEntityByName(defaultRole).get());
-        userRepository.save(user);
+        userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, hashPassword(registerUserDto.getPassword()));
         return true;
     }
 
@@ -84,7 +81,7 @@ public class AuthenticationService {
         UserEntity user = new UserEntity(createUserDto.getUsername(), hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
         LoginResponse response = new LoginResponse();
-        response.setToken("?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
+        response.setToken(host + "auth/signup?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
         response.setExpiresIn(signupLinkExpires);
         response.setRole(createUserDto.getRole());
         return Optional.of(response);

@@ -37,7 +37,12 @@ public class SecurityService {
     }
 
     public boolean attributeAccessFilter(String role, String token) {
-        return true;
+        try {
+            return validateToken(token, role);
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     private boolean validateToken(String token, String role) {

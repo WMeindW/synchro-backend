@@ -33,8 +33,8 @@ public class AuthController extends Controller {
     }
 
     @GetMapping(value = "/signup.html", produces = "text/html")
-    public ResponseEntity<?> register(@RequestAttribute String token, HttpServletRequest request, HttpServletResponse response) {
-        return super.handleRequestsUnsecureRedirect(request, response);
+    public ResponseEntity<?> register(@RequestParam String token, HttpServletRequest request, HttpServletResponse response) {
+        return super.permitSignUp(request, response, token);
     }
 
     @GetMapping(value = "/auth-styles.css", produces = "text/css")

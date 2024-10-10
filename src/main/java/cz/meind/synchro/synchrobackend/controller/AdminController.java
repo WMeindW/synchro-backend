@@ -22,7 +22,8 @@ public class AdminController extends Controller {
 
     @Value("${security.jwt.admin-role}")
     private String controllerRole;
-    private AuthenticationService authenticationService;
+
+    private final AuthenticationService authenticationService;
 
     public AdminController(SecurityService securityService, AuthenticationService authenticationService) {
         super(securityService);
