@@ -91,7 +91,7 @@ public class AuthenticationService {
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
         if (validationUtil.checkUserNotValid(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
-        if (user.getPassword().equals(hashPassword(loginUserDto.getPassword()))) {
+        if (user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) {
             LoginResponse loginResponse = new LoginResponse();
             loginResponse.setToken(generateToken(user, expirationTime));
             loginResponse.setExpiresIn(expirationTime);
