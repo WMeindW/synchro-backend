@@ -48,30 +48,18 @@ public class AuthController extends Controller {
         else return ResponseEntity.status(409).body("Error occurred while registering.");
     }
 
-    //Ass kod
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginUserDto request, HttpServletResponse response) {
         Optional<LoginResponse> login = authService.login(request);
         if (login.isEmpty()) return ResponseEntity.status(409).body("Error occurred while logging in.");
-        else {
-            Cookie cookie = new Cookie("token", login.get().getToken());
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge((int) login.get().getExpiresIn());
-            cookie.setPath("/");
-            response.addCookie(cookie);
-            return ResponseEntity.ok(login.get());
-        }
+        response.addCookie(super.setCookie("token", login.get().getToken(), login.get().getExpiresIn()));
+        return ResponseEntity.ok(login.get());
+
     }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", null);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0); // Expire the cookie
-        cookie.setPath("/");
-
-        response.addCookie(cookie);
-
+        response.addCookie(super.setCookie("token", null, 0));
         return ResponseEntity.ok("Logout successful");
     }
 }

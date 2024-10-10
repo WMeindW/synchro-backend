@@ -1,6 +1,7 @@
 package cz.meind.synchro.synchrobackend.controller.main;
 
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ public class Controller {
     public Controller(SecurityService securityService) {
         this.securityService = securityService;
     }
+
     //Ass kod
     protected ResponseEntity<?> handleRequestsSecureRedirect(HttpServletRequest request, HttpServletResponse response, String role) {
         if (!securityService.accessFilter(request, role)) {
@@ -87,5 +89,13 @@ public class Controller {
             }
             return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
         }
+    }
+
+    protected Cookie setCookie(String name, String value, long expiration) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge((int) expiration);
+        cookie.setPath("/");
+        return cookie;
     }
 }
