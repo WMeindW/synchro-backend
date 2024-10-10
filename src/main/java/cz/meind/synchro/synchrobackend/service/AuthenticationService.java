@@ -81,7 +81,7 @@ public class AuthenticationService {
         UserEntity user = new UserEntity(createUserDto.getUsername(), hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
         LoginResponse response = new LoginResponse();
-        response.setToken(host + "auth/signup?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
+        response.setToken(host + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
         response.setExpiresIn(signupLinkExpires);
         response.setRole(createUserDto.getRole());
         return Optional.of(response);
