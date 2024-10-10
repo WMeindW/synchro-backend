@@ -8,6 +8,7 @@ import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.LoginUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.RegisterUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
+import io.jsonwebtoken.Claims;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -69,6 +70,10 @@ public class AuthenticationService {
     public boolean signup(RegisterUserDto registerUserDto) {
         if (!usernameExists(registerUserDto.getUsername())) return false;
         if (validateUsername(registerUserDto.getUsername())) return false;
+        if (userRepository.findByUsername(registerUserDto.getUsername()).get().getEnabled()) return false;
+        Claims claims = jwtUtil.extractClaims(registerUserDto.getToken());
+        System.out.println(claims.getSubject());
+        if (!registerUserDto.getUsername().equals(claims.getSubject())) return false;
         userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, hashPassword(registerUserDto.getPassword()));
         return true;
     }

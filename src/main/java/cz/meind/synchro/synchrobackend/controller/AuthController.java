@@ -43,8 +43,8 @@ public class AuthController extends Controller {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody RegisterUserDto request) {
-        if (authService.signup(request)) return ResponseEntity.ok(request);
+    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
+        if (authService.signup(registerUserDto)) return ResponseEntity.ok(registerUserDto);
         else return ResponseEntity.status(409).body("Error occurred while registering.");
     }
 

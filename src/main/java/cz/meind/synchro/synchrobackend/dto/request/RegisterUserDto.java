@@ -10,6 +10,7 @@ public class RegisterUserDto {
 
     private String password;
 
+    private String token;
 
     @Override
     public String toString() {
