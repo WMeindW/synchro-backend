@@ -1,4 +1,4 @@
-package cz.meind.synchro.synchrobackend.dto;
+package cz.meind.synchro.synchrobackend.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

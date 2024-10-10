@@ -1,8 +1,9 @@
 package cz.meind.synchro.synchrobackend.controller;
 
-import cz.meind.synchro.synchrobackend.dto.LoginResponse;
-import cz.meind.synchro.synchrobackend.dto.LoginUserDto;
-import cz.meind.synchro.synchrobackend.dto.RegisterUserDto;
+import cz.meind.synchro.synchrobackend.controller.main.Controller;
+import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
+import cz.meind.synchro.synchrobackend.dto.request.LoginUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.RegisterUserDto;
 import cz.meind.synchro.synchrobackend.service.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class AuthController extends Controller {
     }
 
     @GetMapping(value = "/signup.html", produces = "text/html")
-    public ResponseEntity<?> register(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> register(@RequestAttribute String token, HttpServletRequest request, HttpServletResponse response) {
         return super.handleRequestsUnsecureRedirect(request, response);
     }
 

@@ -22,14 +22,18 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Boolean enabled;
+
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
 
-    public UserEntity(RoleEntity role, String password, String username) {
-        this.role = role;
-        this.password = password;
+    public UserEntity(String username, String password, Boolean enabled, RoleEntity role) {
         this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+        this.role = role;
     }
 
     // Constructors
@@ -44,4 +48,14 @@ public class UserEntity {
         return Objects.equals(username, that.username);
     }
 
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", role=" + role +
+                '}';
+    }
 }

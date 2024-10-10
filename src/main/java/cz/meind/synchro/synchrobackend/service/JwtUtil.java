@@ -19,8 +19,6 @@ public class JwtUtil {
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${security.jwt.expiration-time}")
-    private long expirationTime;
 
     // Get the signing key
     private SecretKey getSigningKey() {
@@ -29,9 +27,9 @@ public class JwtUtil {
     }
 
     // Generate JWT token with additional claims
-    public String generateToken(String username, Map<String, String> extraClaims) {
+    public String generateToken(String username, Map<String, String> extraClaims, Long expiresIn) {
         return Jwts.builder().setClaims(extraClaims)  // Set extra claims
-                .setSubject(username).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + expirationTime)).signWith(getSigningKey(), SignatureAlgorithm.HS256)  // Use new signWith method
+                .setSubject(username).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + expiresIn)).signWith(getSigningKey(), SignatureAlgorithm.HS256)  // Use new signWith method
                 .compact();
     }
 

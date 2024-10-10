@@ -36,6 +36,10 @@ public class SecurityService {
 
     }
 
+    public boolean attributeAccessFilter(String role, String token) {
+        return true;
+    }
+
     private boolean validateToken(String token, String role) {
         if (userRepository.findByUsername(jwtUtil.extractClaims(token).getSubject()).isEmpty()) return false;
         if (!role.contains(jwtUtil.extractClaims(token).get("role").toString())) return false;

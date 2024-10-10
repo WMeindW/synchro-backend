@@ -1,11 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>AdminIndex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
 </head>
 <body>
-Admin Index
-<a href="/auth/logout">Logout</a>
+<h2>Create User</h2>
+<form id="createUserForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <label for="role">Role:</label>
+    <input type="text" id="role" name="role" required><br><br>
+
+    <button type="submit">Create User</button>
+</form>
+
+<script>
+    document.getElementById('createUserForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Zabráníme odeslání formuláře
+
+        // Získání hodnot z formuláře
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+
+        // Vytvoření objektu CreateUserDto
+        const createUserDto = {
+            username: username,
+            password: password,
+            role: role
+        };
+
+        // Odeslání JSON requestu pomocí fetch
+        fetch('/admin/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(createUserDto)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('User created successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error creating user.');
+            });
+    });
+</script>
 </body>
 </html>

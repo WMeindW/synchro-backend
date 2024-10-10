@@ -1,5 +1,6 @@
 package cz.meind.synchro.synchrobackend.controller;
 
+import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.service.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package cz.meind.synchro.synchrobackend.controller;
+package cz.meind.synchro.synchrobackend.controller.main;
 
 import cz.meind.synchro.synchrobackend.service.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +16,9 @@ import java.nio.file.Path;
 public class Controller {
     @Value("${security.jwt.secure-route}")
     private String secureRoute;
+
+    @Value("${security.jwt.combined-role}")
+    private String combinedRole;
 
     private final SecurityService securityService;
 
@@ -41,18 +44,48 @@ public class Controller {
 
     protected ResponseEntity<?> handleRequestsUnsecureRedirect(HttpServletRequest request, HttpServletResponse response) {
         System.out.println(secureRoute + request.getRequestURI());
-        if (securityService.accessFilter(request, "USER/ADMIN")) {
+        if (securityService.accessFilter(request, combinedRole)) {
             try {
                 response.sendRedirect("/synchro/api/user/index.html");
             } catch (IOException e) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
         }
         try {
             return ResponseEntity.ok(Files.readAllBytes(Path.of(secureRoute + request.getRequestURI())));
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    protected Boolean handleApiSecureRequest(HttpServletRequest request, String role) {
+        return securityService.accessFilter(request, role);
+    }
+
+    protected ResponseEntity<?> permitSignUp(HttpServletRequest request, HttpServletResponse response, String token) {
+        System.out.println(secureRoute + request.getRequestURI());
+        if (securityService.accessFilter(request, combinedRole)) {
+            try {
+                response.sendRedirect("/synchro/api/user/index.html");
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
+        }
+        if (securityService.attributeAccessFilter(combinedRole, token)) {
+            try {
+                return ResponseEntity.ok(Files.readAllBytes(Path.of(secureRoute + request.getRequestURI())));
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            try {
+                response.sendRedirect("/synchro/api/auth/login.html");
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
         }
     }
 }

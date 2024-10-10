@@ -1,19 +1,18 @@
-package cz.meind.synchro.synchrobackend.dto;
+package cz.meind.synchro.synchrobackend.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class RegisterUserDto {
+public class LoginUserDto {
     private String username;
 
     private String password;
 
-
     @Override
     public String toString() {
-        return "RegisterUserDto{" +
+        return "LoginUserDto{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

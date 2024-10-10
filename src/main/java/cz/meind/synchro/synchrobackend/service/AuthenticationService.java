@@ -4,9 +4,10 @@ import cz.meind.synchro.synchrobackend.database.entities.RoleEntity;
 import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.RoleRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
-import cz.meind.synchro.synchrobackend.dto.LoginResponse;
-import cz.meind.synchro.synchrobackend.dto.LoginUserDto;
-import cz.meind.synchro.synchrobackend.dto.RegisterUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.LoginUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.RegisterUserDto;
+import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -37,6 +38,9 @@ public class AuthenticationService {
     @Value("${security.jwt.admin-password}")
     private String adminPassword;
 
+    @Value("${security.jwt.signup-link-expires}")
+    private long signupLinkExpires;
+
     public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -49,8 +53,10 @@ public class AuthenticationService {
             if (roleRepository.findRoleEntityByName("ADMIN").isEmpty()) {
                 roleRepository.save(new RoleEntity("ADMIN"));
             }
-            userRepository.save(new UserEntity(roleRepository.findRoleEntityByName("ADMIN").get(), hashPassword(adminPassword), adminUsername));
+            userRepository.save(new UserEntity(adminUsername, hashPassword(adminPassword), true, roleRepository.findRoleEntityByName("ADMIN").get()));
         }
+        if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
+            roleRepository.save(new RoleEntity(defaultRole));
     }
 
     private boolean usernameExists(String username) {
@@ -70,6 +76,20 @@ public class AuthenticationService {
         return true;
     }
 
+    public Optional<LoginResponse> createUser(CreateUserDto createUserDto) {
+        if (usernameExists(createUserDto.getUsername())) return Optional.empty();
+        if (validateUsername(createUserDto.getUsername())) return Optional.empty();
+
+        if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
+        UserEntity user = new UserEntity(createUserDto.getUsername(), hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
+        userRepository.save(user);
+        LoginResponse response = new LoginResponse();
+        response.setToken("?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
+        response.setExpiresIn(signupLinkExpires);
+        response.setRole(createUserDto.getRole());
+        return Optional.of(response);
+    }
+
     private boolean validateUsername(String username) {
         return !username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
@@ -80,7 +100,7 @@ public class AuthenticationService {
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
         if (user.getPassword().equals(hashPassword(loginUserDto.getPassword()))) {
             LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setToken(generateToken(user));
+            loginResponse.setToken(generateToken(user, expirationTime));
             loginResponse.setExpiresIn(expirationTime);
             loginResponse.setRole(user.getRole().toString());
             System.out.println(jwtUtil.extractClaims(loginResponse.getToken()));
@@ -109,9 +129,9 @@ public class AuthenticationService {
         }
     }
 
-    private String generateToken(UserEntity user) {
+    private String generateToken(UserEntity user, Long expirationTime) {
         Map<String, String> claims = new HashMap<>();
         claims.put("role", user.getRole().toString());
-        return jwtUtil.generateToken(user.getUsername(), claims);
+        return jwtUtil.generateToken(user.getUsername(), claims, expirationTime);
     }
 }
