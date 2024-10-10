@@ -4,8 +4,8 @@ import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.request.LoginUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.RegisterUserDto;
-import cz.meind.synchro.synchrobackend.service.AuthenticationService;
-import cz.meind.synchro.synchrobackend.service.SecurityService;
+import cz.meind.synchro.synchrobackend.service.auth.AuthenticationService;
+import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +27,7 @@ public class AuthController extends Controller {
         this.authService = authService;
     }
 
+    // NEEEEEEEEEGR
     @GetMapping(value = "/login.html", produces = "text/html")
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response) {
         return super.handleRequestsUnsecureRedirect(request, response);
@@ -48,6 +49,7 @@ public class AuthController extends Controller {
         else return ResponseEntity.status(409).body("Error occurred while registering.");
     }
 
+    //Ass kod
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginUserDto request, HttpServletResponse response) {
         Optional<LoginResponse> login = authService.login(request);

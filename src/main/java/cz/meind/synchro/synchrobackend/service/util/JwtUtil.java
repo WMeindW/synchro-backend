@@ -1,4 +1,4 @@
-package cz.meind.synchro.synchrobackend.service;
+package cz.meind.synchro.synchrobackend.service.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

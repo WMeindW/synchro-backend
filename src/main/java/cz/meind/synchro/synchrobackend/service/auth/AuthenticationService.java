@@ -1,4 +1,4 @@
-package cz.meind.synchro.synchrobackend.service;
+package cz.meind.synchro.synchrobackend.service.auth;
 
 import cz.meind.synchro.synchrobackend.database.entities.RoleEntity;
 import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
@@ -8,24 +8,26 @@ import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.LoginUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.RegisterUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
-import io.jsonwebtoken.Claims;
+import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
+import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Component
 public class AuthenticationService {
-
+    //Ass kod
     private final UserRepository userRepository;
+
     private final RoleRepository roleRepository;
 
     private final JwtUtil jwtUtil;
+
+    private final ValidationUtil validationUtil;
 
     @Value("${security.jwt.default-role}")
     private String defaultRole;
@@ -45,10 +47,11 @@ public class AuthenticationService {
     @Value("${security.jwt.signup-link-expires}")
     private long signupLinkExpires;
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil, ValidationUtil validationUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtil = jwtUtil;
+        this.validationUtil = validationUtil;
     }
 
     @PostConstruct
@@ -57,33 +60,25 @@ public class AuthenticationService {
             if (roleRepository.findRoleEntityByName("ADMIN").isEmpty()) {
                 roleRepository.save(new RoleEntity("ADMIN"));
             }
-            userRepository.save(new UserEntity(adminUsername, hashPassword(adminPassword), true, roleRepository.findRoleEntityByName("ADMIN").get()));
+            userRepository.save(new UserEntity(adminUsername, validationUtil.hashPassword(adminPassword), true, roleRepository.findRoleEntityByName("ADMIN").get()));
         }
         if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
             roleRepository.save(new RoleEntity(defaultRole));
     }
 
-    private boolean usernameExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
 
     public boolean signup(RegisterUserDto registerUserDto) {
-        if (!usernameExists(registerUserDto.getUsername())) return false;
-        if (validateUsername(registerUserDto.getUsername())) return false;
-        if (userRepository.findByUsername(registerUserDto.getUsername()).get().getEnabled()) return false;
-        Claims claims = jwtUtil.extractClaims(registerUserDto.getToken());
-        System.out.println(claims.getSubject());
-        if (!registerUserDto.getUsername().equals(claims.getSubject())) return false;
-        userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, hashPassword(registerUserDto.getPassword()));
+        if (validationUtil.checkUserNotValid(registerUserDto.getUsername())) return false;
+        if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject()))
+            return false;
+        userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, validationUtil.hashPassword(registerUserDto.getPassword()));
         return true;
     }
 
     public Optional<LoginResponse> createUser(CreateUserDto createUserDto) {
-        if (usernameExists(createUserDto.getUsername())) return Optional.empty();
-        if (validateUsername(createUserDto.getUsername())) return Optional.empty();
-
+        if (!validationUtil.validateUserNew(createUserDto.getUsername())) return Optional.empty();
         if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
-        UserEntity user = new UserEntity(createUserDto.getUsername(), hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
+        UserEntity user = new UserEntity(createUserDto.getUsername(), validationUtil.hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
         LoginResponse response = new LoginResponse();
         response.setToken(host + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires));
@@ -92,13 +87,9 @@ public class AuthenticationService {
         return Optional.of(response);
     }
 
-    private boolean validateUsername(String username) {
-        return !username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
-    }
 
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
-        if (!usernameExists(loginUserDto.getUsername())) return Optional.empty();
-        if (validateUsername(loginUserDto.getUsername())) return Optional.empty();
+        if (validationUtil.checkUserNotValid(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
         if (user.getPassword().equals(hashPassword(loginUserDto.getPassword()))) {
             LoginResponse loginResponse = new LoginResponse();
@@ -111,25 +102,6 @@ public class AuthenticationService {
         return Optional.empty();
     }
 
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = digest.digest(password.getBytes());
-
-            // Convert the byte array into a hexadecimal string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashedBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
-    }
 
     private String generateToken(UserEntity user, Long expirationTime) {
         Map<String, String> claims = new HashMap<>();

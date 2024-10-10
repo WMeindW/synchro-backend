@@ -1,6 +1,7 @@
-package cz.meind.synchro.synchrobackend.service;
+package cz.meind.synchro.synchrobackend.service.auth;
 
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
+import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
