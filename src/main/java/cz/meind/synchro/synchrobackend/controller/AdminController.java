@@ -8,7 +8,6 @@ import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.service.auth.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,15 +34,13 @@ public class AdminController extends Controller {
     public ResponseEntity<?> index(HttpServletRequest request, HttpServletResponse response) {
         return super.handleRequestsSecureRedirect(request, response, config.getAdminRole());
     }
-    //Ass kod
+
     @PostMapping(value = "/create", produces = "application/json")
     public ResponseEntity<?> createAccount(@RequestBody CreateUserDto createUserDto, HttpServletRequest request, HttpServletResponse response) {
-        if (super.handleApiSecureRequest(request, config.getAdminRole())) {
-            Optional<LoginResponse> loginResponse = authenticationService.createUser(createUserDto);
-            if (loginResponse.isPresent()) {
-                return ResponseEntity.ok(loginResponse.get());
-            }
-        }
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Optional<LoginResponse> loginResponse = authenticationService.createUser(createUserDto);
+        if (loginResponse.isPresent()) return ResponseEntity.ok(loginResponse.get());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
