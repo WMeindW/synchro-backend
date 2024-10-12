@@ -1,5 +1,6 @@
 package cz.meind.synchro.synchrobackend.service.util;
 
+import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,13 +15,15 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
+    private final SynchroConfig config;
 
+    public JwtUtil(SynchroConfig config) {
+        this.config = config;
+    }
 
     // Get the signing key
     private SecretKey getSigningKey() {
-        byte[] keyBytes = secretKey.getBytes();
+        byte[] keyBytes = config.getSecretKey().getBytes();
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
