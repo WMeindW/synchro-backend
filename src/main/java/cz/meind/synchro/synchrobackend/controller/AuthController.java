@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Optional;
@@ -52,14 +51,14 @@ public class AuthController extends Controller {
     public ResponseEntity<?> login(@RequestBody LoginUserDto request, HttpServletResponse response) {
         Optional<LoginResponse> login = authService.login(request);
         if (login.isEmpty()) return ResponseEntity.status(409).body("Error occurred while logging in.");
-        response.addCookie(super.setCookie("token", login.get().getToken(), login.get().getExpiresIn()));
+        response.addCookie(super.setCookie(login.get().getToken(), login.get().getExpiresIn()));
         return ResponseEntity.ok(login.get());
 
     }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        response.addCookie(super.setCookie("token", null, 0));
+        response.addCookie(super.setCookie(null, 0));
         return ResponseEntity.ok("Logout successful");
     }
 }

@@ -1,5 +1,6 @@
 package cz.meind.synchro.synchrobackend.service.auth;
 
+import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.database.entities.RoleEntity;
 import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.RoleRepository;
@@ -20,7 +21,6 @@ import java.util.Optional;
 
 @Component
 public class AuthenticationService {
-    //Ass kod
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
@@ -29,44 +29,30 @@ public class AuthenticationService {
 
     private final ValidationUtil validationUtil;
 
-    @Value("${security.jwt.default-role}")
-    private String defaultRole;
+    private final SynchroConfig config;
 
-    @Value("${security.jwt.host-address}")
-    private String host;
 
-    @Value("${security.jwt.expiration-time}")
-    private long expirationTime;
-
-    @Value("${security.jwt.admin-username:admin_user}")
-    private String adminUsername;
-
-    @Value("${security.jwt.admin-password}")
-    private String adminPassword;
-
-    @Value("${security.jwt.signup-link-expires}")
-    private long signupLinkExpires;
-
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil, ValidationUtil validationUtil) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil, ValidationUtil validationUtil, SynchroConfig config) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtil = jwtUtil;
         this.validationUtil = validationUtil;
+        this.config = config;
     }
 
     @PostConstruct
     private void initializeAdmin() {
-        if (userRepository.findByUsername(adminUsername).isPresent()) return;
-        if (roleRepository.findRoleEntityByName("ADMIN").isPresent()) return;
-        roleRepository.save(new RoleEntity("ADMIN"));
-        userRepository.save(new UserEntity(adminUsername, validationUtil.hashPassword(adminPassword), true, roleRepository.findRoleEntityByName("ADMIN").get()));
+        if (userRepository.findByUsername(config.getAdminUsername()).isPresent()) return;
+        if (roleRepository.findRoleEntityByName(config.getAdminRole()).isPresent()) return;
+        roleRepository.save(new RoleEntity(config.getAdminRole()));
+        userRepository.save(new UserEntity(config.getAdminUsername(), validationUtil.hashPassword(config.getAdminPassword()), true, roleRepository.findRoleEntityByName("ADMIN").get()));
 
     }
 
     @PostConstruct
     private void initializeUser() {
-        if (roleRepository.findRoleEntityByName(defaultRole).isEmpty())
-            roleRepository.save(new RoleEntity(defaultRole));
+        if (roleRepository.findRoleEntityByName(config.getDefaultRole()).isEmpty())
+            roleRepository.save(new RoleEntity(config.getDefaultRole()));
     }
 
     public boolean signup(RegisterUserDto registerUserDto) {
@@ -82,7 +68,7 @@ public class AuthenticationService {
         if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
         UserEntity user = new UserEntity(createUserDto.getUsername(), validationUtil.hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
-        return Optional.of(new LoginResponse(host + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, signupLinkExpires), signupLinkExpires, createUserDto.getRole()));
+        return Optional.of(new LoginResponse(config.getHost() + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, config.getSignupLinkExpires()), config.getSignupLinkExpires(), createUserDto.getRole()));
     }
 
 
@@ -91,7 +77,7 @@ public class AuthenticationService {
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
         if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword())))
             return Optional.empty();
-        return Optional.of(new LoginResponse(generateToken(user, expirationTime), expirationTime, user.getRole().toString()));
+        return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString()));
     }
 
 
