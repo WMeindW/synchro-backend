@@ -3,12 +3,15 @@ package cz.meind.synchro.synchrobackend.database.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 
 import java.util.Objects;
 
 @Setter
 @Getter
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -25,6 +28,7 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean enabled;
 
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
