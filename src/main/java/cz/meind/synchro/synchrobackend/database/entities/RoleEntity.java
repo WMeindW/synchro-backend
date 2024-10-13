@@ -22,7 +22,7 @@ public class RoleEntity {
     private String name;
 
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private Collection<UserEntity> users;
 
     public RoleEntity(String name) {
