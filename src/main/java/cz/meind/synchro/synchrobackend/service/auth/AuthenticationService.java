@@ -12,7 +12,6 @@ import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -57,8 +56,7 @@ public class AuthenticationService {
 
     public boolean signup(RegisterUserDto registerUserDto) {
         if (!validationUtil.signupCheck(registerUserDto.getUsername())) return false;
-        if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject()))
-            return false;
+        if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject())) return false;
         userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, validationUtil.hashPassword(registerUserDto.getPassword()));
         return true;
     }
@@ -75,8 +73,7 @@ public class AuthenticationService {
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
         if (!validationUtil.loginCheck(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
-        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword())))
-            return Optional.empty();
+        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) return Optional.empty();
         return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString()));
     }
 

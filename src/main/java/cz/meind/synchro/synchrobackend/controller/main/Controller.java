@@ -7,14 +7,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @Component
 public class Controller {
@@ -39,18 +34,12 @@ public class Controller {
 
     //Ass kod
     protected ResponseEntity<?> handleRequestsSecureRedirect(HttpServletRequest request, HttpServletResponse response, String role) {
-        if (!securityService.accessFilter(request, role)) {
-            router.redirect(response, config.getLoginPage());
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        if (this.accessFilterRedirectLogin(request, response, role)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         return ResponseEntity.ok(router.getFile(request));
     }
 
     protected ResponseEntity<?> handleRequestsUnsecureRedirect(HttpServletRequest request, HttpServletResponse response) {
-        if (securityService.accessFilter(request, config.getCombinedRole())) {
-            router.redirect(response, config.getUserDashboardPage());
-            return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
-        }
+        if (this.accessFilterRedirectDashboard(request, response, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.FOUND);
         return ResponseEntity.ok(router.getFile(request));
     }
 
@@ -59,16 +48,12 @@ public class Controller {
     }
 
     protected ResponseEntity<?> permitSignUp(HttpServletRequest request, HttpServletResponse response, String token) {
-        if (securityService.accessFilter(request, config.getCombinedRole())) {
-            router.redirect(response, config.getUserDashboardPage());
-            return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
-        }
-        if (securityService.attributeAccessFilter(config.getCombinedRole(), token)) {
+        if (this.accessFilterRedirectDashboard(request, response, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.FOUND);
+        if (securityService.attributeAccessFilter(config.getCombinedRole(), token))
             return ResponseEntity.ok(router.getFile(request));
-        } else {
-            router.redirect(response, config.getLoginPage());
-            return new ResponseEntity<>(HttpStatus.MOVED_PERMANENTLY);
-        }
+        router.redirect(response, config.getLoginPage());
+        return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
     protected Cookie setCookie(String value, long expiration) {
@@ -77,5 +62,21 @@ public class Controller {
         cookie.setMaxAge((int) expiration);
         cookie.setPath("/");
         return cookie;
+    }
+
+    private boolean accessFilterRedirectDashboard(HttpServletRequest request, HttpServletResponse response, String role) {
+        if (securityService.accessFilter(request, role)) {
+            router.redirect(response, config.getUserDashboardPage());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean accessFilterRedirectLogin(HttpServletRequest request, HttpServletResponse response, String role) {
+        if (!securityService.accessFilter(request, role)) {
+            router.redirect(response, config.getLoginPage());
+            return true;
+        }
+        return false;
     }
 }
