@@ -37,8 +37,7 @@ public class AdminController extends Controller {
 
     @PostMapping(value = "/create", produces = "application/json")
     public ResponseEntity<?> createAccount(@RequestBody CreateUserDto createUserDto, HttpServletRequest request, HttpServletResponse response) {
-        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<LoginResponse> loginResponse = authenticationService.createUser(createUserDto);
         if (loginResponse.isPresent()) return ResponseEntity.ok(loginResponse.get());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

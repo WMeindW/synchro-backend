@@ -17,7 +17,7 @@ public class SecurityService {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }
-
+    //Ass kod
     public boolean accessFilter(HttpServletRequest request, String role) {
         Cookie cookie = null;
         if (request.getCookies() == null) return false;
