@@ -17,23 +17,10 @@ public class SecurityService {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }
-    //Ass kod
-    public boolean accessFilter(HttpServletRequest request, String role) {
-        Cookie cookie = null;
-        if (request.getCookies() == null) return false;
-        for (Cookie c : request.getCookies()) {
-            if (c.getName().equals("token")) {
-                cookie = c;
-                break;
-            }
-        }
-        if (cookie == null) return false;
-        try {
-            return validateToken(cookie.getValue(), role);
-        } catch (Exception e) {
-            return false;
-        }
 
+    public boolean accessFilter(HttpServletRequest request, String role) {
+        if (extractCookie(request) == null) return false;
+        return attributeAccessFilter(role, extractCookie(request));
     }
 
     public boolean attributeAccessFilter(String role, String token) {
@@ -43,6 +30,13 @@ public class SecurityService {
             return false;
         }
 
+    }
+
+    private String extractCookie(HttpServletRequest request) {
+        if (request.getCookies() == null) return null;
+        for (Cookie c : request.getCookies())
+            if (c.getName().equals("token")) return c.getValue();
+        return null;
     }
 
     private boolean validateToken(String token, String role) {
