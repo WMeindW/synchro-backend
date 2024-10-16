@@ -32,6 +32,38 @@
            memoryStoreEvictionPolicy="LRU"
            overflowToDisk="false"/>
 
+    <cache name="cz.meind.synchro.synchrobackend.database.entities.EventEntity"
+           maxEntriesLocalHeap="2000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="7200"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"/>
+
+    <cache name="cz.meind.synchro.synchrobackend.database.entities.EventTypeEntity"
+           maxEntriesLocalHeap="2000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="7200"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"/>
+
+
+    <cache name="cz.meind.synchro.synchrobackend.database.entities.UserEntity.events"
+           maxEntriesLocalHeap="2000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="7200"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"/>
+
+    <cache name="cz.meind.synchro.synchrobackend.database.entities.EventTypeEntity.events"
+           maxEntriesLocalHeap="2000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="7200"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"/>
     <!-- Cache for RoleEntity.users relationship -->
     <cache name="cz.meind.synchro.synchrobackend.database.entities.RoleEntity.users"
            maxEntriesLocalHeap="1000"

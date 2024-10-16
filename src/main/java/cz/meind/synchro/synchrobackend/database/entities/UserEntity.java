@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 
+import java.util.List;
 import java.util.Objects;
 
 @Setter
@@ -32,6 +33,10 @@ public class UserEntity {
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
+
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<EventEntity> events;
 
     public UserEntity(String username, String password, Boolean enabled, RoleEntity role) {
         this.username = username;
