@@ -23,4 +23,13 @@ public class EventTypeEntity {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "type", fetch = FetchType.LAZY)
     private List<EventEntity> events;
+
+    public EventTypeEntity(String name) {
+        this.name = name;
+        events = null;
+    }
+
+    public EventTypeEntity() {
+
+    }
 }
