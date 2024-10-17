@@ -6,7 +6,6 @@ import cz.meind.synchro.synchrobackend.database.repositories.EventTypeRepository
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
