@@ -34,4 +34,10 @@ public class SecureController extends Controller {
         if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
+
+    @GetMapping(value = "/query-event", produces = "text/html")
+    public ResponseEntity<?> queryEvent(HttpServletRequest request) {
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok("Success");
+    }
 }
