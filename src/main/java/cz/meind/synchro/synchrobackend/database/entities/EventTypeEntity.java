@@ -26,7 +26,6 @@ public class EventTypeEntity {
 
     public EventTypeEntity(String name) {
         this.name = name;
-        events = null;
     }
 
     public EventTypeEntity() {
