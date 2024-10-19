@@ -30,8 +30,10 @@ public class SecureController extends Controller {
     }
 
     @PostMapping(value = "/create-event", produces = "text/html")
+    @CrossOrigin
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        System.out.println(createEventDto);
         return ResponseEntity.ok("Success");
     }
 
