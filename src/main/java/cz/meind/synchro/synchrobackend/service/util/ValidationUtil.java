@@ -1,17 +1,23 @@
 package cz.meind.synchro.synchrobackend.service.util;
 
+import cz.meind.synchro.synchrobackend.database.entities.EventEntity;
+import cz.meind.synchro.synchrobackend.database.repositories.EventRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
+import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
+import java.util.List;
 
 @Component
 public class ValidationUtil {
+    private final EventRepository eventRepository;
     UserRepository userRepository;
 
-    public ValidationUtil(UserRepository userRepository) {
+    public ValidationUtil(UserRepository userRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
+        this.eventRepository = eventRepository;
     }
 
     public boolean loginCheck(String username) {
@@ -31,6 +37,11 @@ public class ValidationUtil {
         return validateUsername(username);
     }
 
+    public boolean validateEvent(CreateEventDto createEventDto) {
+        List<EventEntity> events = eventRepository.findAllByUser(userRepository.findByUsername(createEventDto.getUsername()).get())
+        return true;
+    }
+
     private boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
@@ -38,6 +49,7 @@ public class ValidationUtil {
     private boolean validateUsername(String username) {
         return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
+
 
     public String hashPassword(String password) {
         StringBuilder hexString = new StringBuilder();
