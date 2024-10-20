@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Component
@@ -38,7 +39,10 @@ public class ValidationUtil {
     }
 
     public boolean validateEvent(CreateEventDto createEventDto) {
-        List<EventEntity> events = eventRepository.findAllByUser(userRepository.findByUsername(createEventDto.getUsername()).get())
+        if (Timestamp.valueOf(createEventDto.getEnd()).before(Timestamp.valueOf(createEventDto.getStart()))) return false;
+        for (EventEntity event : eventRepository.findAllByUser(userRepository.findByUsername(createEventDto.getUsername()).get()))
+            if (event.getTimeEnd().before(Timestamp.valueOf(createEventDto.getStart())) || Timestamp.valueOf(createEventDto.getEnd()).before(event.getTimeStart()))
+                return false;
         return true;
     }
 

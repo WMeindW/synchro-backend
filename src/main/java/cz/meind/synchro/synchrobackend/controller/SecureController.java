@@ -37,7 +37,6 @@ public class SecureController extends Controller {
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         System.out.println(scheduleService.createEvent(createEventDto));
-        System.out.println(createEventDto);
         return ResponseEntity.ok("Success");
     }
 

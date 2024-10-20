@@ -14,14 +14,13 @@ public class ScheduleService {
     }
 
     public boolean createEvent(CreateEventDto createEventDto) {
-
+        if (!checkEvent(createEventDto)) return false;
+        System.out.println("Validated");
         return true;
     }
 
     private boolean checkEvent(CreateEventDto createEventDto) {
         if (!validationUtil.loginCheck(createEventDto.getUsername())) return false;
-        if ()
-        // TODO: Implement event validation
-        return true;
+        return validationUtil.validateEvent(createEventDto);
     }
 }
