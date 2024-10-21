@@ -20,6 +20,10 @@ public class EventTypesService {
         this.synchroConfig = synchroConfig;
     }
 
+    public boolean checkMissing(String type) {
+        return eventTypeRepository.findEventTypeEntityByName(type).isEmpty();
+    }
+
     @PostConstruct
     private void initializeTypes() {
         for (String m : checkMissing()) eventTypeRepository.save(new EventTypeEntity(m));

@@ -32,4 +32,25 @@ public class EventEntity {
     @JoinColumn(name = "type_id", nullable = false)
     private EventTypeEntity type;
 
+    public EventEntity(EventTypeEntity type, UserEntity user, Timestamp timeEnd, Timestamp timeStart) {
+        this.type = type;
+        this.user = user;
+        this.timeEnd = timeEnd;
+        this.timeStart = timeStart;
+    }
+
+    public EventEntity() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "EventEntity{" +
+                "id=" + id +
+                ", timeStart=" + timeStart +
+                ", timeEnd=" + timeEnd +
+                ", user=" + user +
+                ", type=" + type +
+                '}';
+    }
 }

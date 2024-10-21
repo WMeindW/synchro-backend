@@ -32,7 +32,7 @@ public class SecurityService {
 
     }
 
-    private String extractCookie(HttpServletRequest request) {
+    public String extractCookie(HttpServletRequest request) {
         if (request.getCookies() == null) return null;
         for (Cookie c : request.getCookies())
             if (c.getName().equals("token")) return c.getValue();
