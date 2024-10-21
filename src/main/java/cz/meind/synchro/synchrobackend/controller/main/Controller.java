@@ -56,8 +56,8 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
-    protected Cookie setCookie(String value, long expiration) {
-        Cookie cookie = new Cookie("token", value);
+    protected Cookie setCookie(String name,String value, long expiration) {
+        Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setMaxAge((int) expiration);
         cookie.setPath("/");

@@ -6,6 +6,8 @@ import cz.meind.synchro.synchrobackend.database.repositories.EventRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.EventTypeRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
+import cz.meind.synchro.synchrobackend.dto.response.EventResponseEntity;
+import cz.meind.synchro.synchrobackend.dto.response.EventsResponse;
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
@@ -13,6 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ScheduleService {
@@ -40,18 +45,24 @@ public class ScheduleService {
     public boolean createEvent(CreateEventDto createEventDto, String role, HttpServletRequest request) {
         if (!checkEvent(createEventDto)) return false;
         if (eventTypesService.checkMissing(createEventDto.getType())) return false;
-        /*if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
+        if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
             return false;
-         */
         return saveEvent(createEventDto);
     }
 
+    public EventsResponse queryEvents() {
+        List<EventResponseEntity> responseEntities = eventRepository.findAll().stream()
+                .map(eventEntity -> new EventResponseEntity(
+                        eventEntity.getTimeStart(),
+                        eventEntity.getTimeEnd(),
+                        eventEntity.getUser().getUsername(),
+                        eventEntity.getType().getName()))
+                .collect(Collectors.toList());
+        return new EventsResponse(responseEntities);
+    }
+
     private boolean saveEvent(CreateEventDto createEventDto) {
-        eventRepository.save(new EventEntity(
-                eventTypeRepository.findEventTypeEntityByName(createEventDto.getType()).get(),
-                userRepository.findByUsername(createEventDto.getUsername()).get(),
-                Timestamp.valueOf(createEventDto.getEnd()),
-                Timestamp.valueOf(createEventDto.getStart())));
+        eventRepository.save(new EventEntity(eventTypeRepository.findEventTypeEntityByName(createEventDto.getType()).get(), userRepository.findByUsername(createEventDto.getUsername()).get(), Timestamp.valueOf(createEventDto.getEnd()), Timestamp.valueOf(createEventDto.getStart())));
         return true;
     }
 

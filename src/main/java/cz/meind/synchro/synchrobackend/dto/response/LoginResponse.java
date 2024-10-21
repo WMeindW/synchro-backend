@@ -12,9 +12,12 @@ public class LoginResponse {
 
     private String role;
 
-    public LoginResponse(String token, long expiresIn, String role) {
+    private String username;
+
+    public LoginResponse(String token, long expiresIn, String role, String username) {
         this.token = token;
         this.expiresIn = expiresIn;
         this.role = role;
+        this.username = username;
     }
 }

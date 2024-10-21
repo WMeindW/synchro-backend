@@ -66,7 +66,7 @@ public class AuthenticationService {
         if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
         UserEntity user = new UserEntity(createUserDto.getUsername(), validationUtil.hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
-        return Optional.of(new LoginResponse(config.getHost() + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, config.getSignupLinkExpires()), config.getSignupLinkExpires(), createUserDto.getRole()));
+        return Optional.of(new LoginResponse(config.getHost() + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, config.getSignupLinkExpires()), config.getSignupLinkExpires(), createUserDto.getRole(),createUserDto.getUsername()));
     }
 
 
@@ -74,7 +74,7 @@ public class AuthenticationService {
         if (!validationUtil.loginCheck(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
         if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) return Optional.empty();
-        return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString()));
+        return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString(), user.getUsername()));
     }
 
 
