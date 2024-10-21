@@ -32,8 +32,13 @@ public class JwtUtil {
     }
 
     public Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        }catch (Exception e) {
+            return null;
+        }
+
     }
 
     public boolean isTokenValid(String token) {

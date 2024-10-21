@@ -39,7 +39,7 @@ public class SecureController extends Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
-
+    @CrossOrigin
     @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
