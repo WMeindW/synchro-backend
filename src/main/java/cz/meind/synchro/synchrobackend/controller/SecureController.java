@@ -6,7 +6,6 @@ import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.events.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class SecureController extends Controller {
     @CrossOrigin
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        System.out.println(scheduleService.createEventUser(createEventDto, config.getCombinedRole(), request));
+        if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
 
