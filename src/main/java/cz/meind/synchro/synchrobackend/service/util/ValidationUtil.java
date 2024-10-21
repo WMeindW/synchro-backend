@@ -39,11 +39,10 @@ public class ValidationUtil {
     }
 
     public boolean validateEvent(CreateEventDto createEventDto) {
-        if (Timestamp.valueOf(createEventDto.getEnd()).before(Timestamp.valueOf(createEventDto.getStart()))) return false;
         for (EventEntity event : eventRepository.findAllByUser(userRepository.findByUsername(createEventDto.getUsername()).get()))
             if (event.getTimeEnd().before(Timestamp.valueOf(createEventDto.getStart())) || Timestamp.valueOf(createEventDto.getEnd()).before(event.getTimeStart()))
                 return false;
-        return true;
+        return !(Timestamp.valueOf(createEventDto.getEnd()).before(Timestamp.valueOf(createEventDto.getStart())));
     }
 
     private boolean usernameExists(String username) {

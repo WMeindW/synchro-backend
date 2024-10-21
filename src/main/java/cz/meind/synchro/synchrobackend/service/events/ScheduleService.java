@@ -13,9 +13,9 @@ public class ScheduleService {
         this.validationUtil = validationUtil;
     }
 
-    public boolean createEvent(CreateEventDto createEventDto) {
+    public boolean createEvent(CreateEventDto createEventDto, String role) {
         if (!checkEvent(createEventDto)) return false;
-        System.out.println("Validated");
+        //TODO: Implement saving
         return true;
     }
 
