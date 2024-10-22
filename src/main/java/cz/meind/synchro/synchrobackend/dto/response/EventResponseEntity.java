@@ -9,12 +9,15 @@ import java.sql.Timestamp;
 @Getter
 public class EventResponseEntity {
 
-    public EventResponseEntity(Timestamp timeStart, Timestamp timeEnd, String username, String type) {
+    public EventResponseEntity(Long id, Timestamp timeStart, Timestamp timeEnd, String username, String type) {
+        this.id = id;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
         this.username = username;
         this.type = type;
     }
+
+    private Long id;
 
     private Timestamp timeStart;
 
