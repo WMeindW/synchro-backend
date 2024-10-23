@@ -45,9 +45,8 @@ public class ScheduleService {
     public boolean createEvent(CreateEventDto createEventDto, String role, HttpServletRequest request) {
         if (!checkEvent(createEventDto)) return false;
         if (eventTypesService.checkMissing(createEventDto.getType())) return false;
-        /*if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
+        if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
             return false;
-         */
         return saveEvent(createEventDto);
     }
 
