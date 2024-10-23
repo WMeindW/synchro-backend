@@ -32,7 +32,6 @@ public class Controller {
         this.securityService = securityService;
     }
 
-    //Ass kod
     protected ResponseEntity<?> handleRequestsSecureRedirect(HttpServletRequest request, HttpServletResponse response, String role) {
         if (this.accessFilterRedirectLogin(request, response, role)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         return ResponseEntity.ok(router.getFile(request));
