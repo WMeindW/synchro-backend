@@ -35,8 +35,7 @@ public class SecureController extends Controller {
     @CrossOrigin
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
     @CrossOrigin
