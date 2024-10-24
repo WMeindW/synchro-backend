@@ -45,7 +45,6 @@ public class AuthenticationService {
         if (roleRepository.findRoleEntityByName(config.getAdminRole()).isPresent()) return;
         roleRepository.save(new RoleEntity(config.getAdminRole()));
         userRepository.save(new UserEntity(config.getAdminUsername(), validationUtil.hashPassword(config.getAdminPassword()), true, roleRepository.findRoleEntityByName("ADMIN").get()));
-
     }
 
     @PostConstruct
@@ -56,7 +55,8 @@ public class AuthenticationService {
 
     public boolean signup(RegisterUserDto registerUserDto) {
         if (!validationUtil.signupCheck(registerUserDto.getUsername())) return false;
-        if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject())) return false;
+        if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject()))
+            return false;
         userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, validationUtil.hashPassword(registerUserDto.getPassword()));
         return true;
     }
@@ -66,17 +66,17 @@ public class AuthenticationService {
         if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
         UserEntity user = new UserEntity(createUserDto.getUsername(), validationUtil.hashPassword(createUserDto.getPassword()), false, roleRepository.findRoleEntityByName(createUserDto.getRole()).get());
         userRepository.save(user);
-        return Optional.of(new LoginResponse(config.getHost() + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, config.getSignupLinkExpires()), config.getSignupLinkExpires(), createUserDto.getRole(),createUserDto.getUsername()));
+        return Optional.of(new LoginResponse(config.getHost() + "auth/signup.html?username=" + user.getUsername() + "&token=" + generateToken(user, config.getSignupLinkExpires()), config.getSignupLinkExpires(), createUserDto.getRole(), createUserDto.getUsername()));
     }
 
 
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
         if (!validationUtil.loginCheck(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
-        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) return Optional.empty();
+        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword())))
+            return Optional.empty();
         return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString(), user.getUsername()));
     }
-
 
     private String generateToken(UserEntity user, Long expirationTime) {
         Map<String, String> claims = new HashMap<>();

@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class ValidationUtil {
     private final EventRepository eventRepository;
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public ValidationUtil(UserRepository userRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
