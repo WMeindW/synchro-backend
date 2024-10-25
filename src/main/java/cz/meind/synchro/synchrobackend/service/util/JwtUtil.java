@@ -1,6 +1,7 @@
 package cz.meind.synchro.synchrobackend.service.util;
 
 import cz.meind.synchro.synchrobackend.config.SynchroConfig;
+import cz.meind.synchro.synchrobackend.database.repositories.BlacklistJwtRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,9 +16,11 @@ import java.util.Map;
 public class JwtUtil {
 
     private final SynchroConfig config;
+    private final BlacklistJwtRepository blacklistJwtRepository;
 
-    public JwtUtil(SynchroConfig config) {
+    public JwtUtil(SynchroConfig config, BlacklistJwtRepository blacklistJwtRepository) {
         this.config = config;
+        this.blacklistJwtRepository = blacklistJwtRepository;
     }
 
     private SecretKey getSigningKey() {
@@ -35,13 +38,14 @@ public class JwtUtil {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
 
     }
 
     public boolean isTokenValid(String token) {
+        if (blacklistJwtRepository.findBlacklistJwtEntityByJwtToken(token).isPresent()) return false;
         return !isTokenExpired(token);
     }
 
