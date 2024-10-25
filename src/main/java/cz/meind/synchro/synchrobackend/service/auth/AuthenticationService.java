@@ -1,8 +1,10 @@
 package cz.meind.synchro.synchrobackend.service.auth;
 
 import cz.meind.synchro.synchrobackend.config.SynchroConfig;
+import cz.meind.synchro.synchrobackend.database.entities.BlacklistJwtEntity;
 import cz.meind.synchro.synchrobackend.database.entities.RoleEntity;
 import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
+import cz.meind.synchro.synchrobackend.database.repositories.BlacklistJwtRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.RoleRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
@@ -12,6 +14,7 @@ import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -29,14 +32,18 @@ public class AuthenticationService {
     private final ValidationUtil validationUtil;
 
     private final SynchroConfig config;
+    private final BlacklistJwtRepository blacklistJwtRepository;
+    private final SecurityService securityService;
 
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil, ValidationUtil validationUtil, SynchroConfig config) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil, ValidationUtil validationUtil, SynchroConfig config, BlacklistJwtRepository blacklistJwtRepository, SecurityService securityService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtil = jwtUtil;
         this.validationUtil = validationUtil;
         this.config = config;
+        this.blacklistJwtRepository = blacklistJwtRepository;
+        this.securityService = securityService;
     }
 
     @PostConstruct
@@ -51,6 +58,10 @@ public class AuthenticationService {
     private void initializeUser() {
         if (roleRepository.findRoleEntityByName(config.getDefaultRole()).isEmpty())
             roleRepository.save(new RoleEntity(config.getDefaultRole()));
+    }
+
+    public void logout(HttpServletRequest request) {
+        blacklistJwtRepository.save(new BlacklistJwtEntity(securityService.extractCookie(request)));
     }
 
     public boolean signup(RegisterUserDto registerUserDto) {

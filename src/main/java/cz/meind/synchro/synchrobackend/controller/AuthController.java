@@ -1,5 +1,6 @@
 package cz.meind.synchro.synchrobackend.controller;
 
+import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.request.LoginUserDto;
@@ -8,6 +9,7 @@ import cz.meind.synchro.synchrobackend.service.auth.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +22,13 @@ import java.util.Optional;
 public class AuthController extends Controller {
 
     private final AuthenticationService authService;
+    private final SynchroConfig synchroConfig;
 
 
-    public AuthController(AuthenticationService authService, SecurityService securityService) {
+    public AuthController(AuthenticationService authService, SecurityService securityService, SynchroConfig synchroConfig) {
         super(securityService);
         this.authService = authService;
+        this.synchroConfig = synchroConfig;
     }
 
     @GetMapping(value = "/login.html", produces = "text/html")
@@ -59,9 +63,11 @@ public class AuthController extends Controller {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-        response.addCookie(super.setCookie("token",null, 0));
-        response.addCookie(super.setCookie("username",null, 0));
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        if (!super.handleApiSecureRequest(request, synchroConfig.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        authService.logout(request);
+        response.addCookie(super.setCookie("token", null, 0));
+        response.addCookie(super.setCookie("username", null, 0));
         return ResponseEntity.ok("Logout successful");
     }
 }
