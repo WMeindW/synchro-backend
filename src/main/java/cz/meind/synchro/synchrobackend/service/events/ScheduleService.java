@@ -52,8 +52,8 @@ public class ScheduleService {
     public EventsResponse queryEvents() {
         List<EventResponseEntity> responseEntities = eventRepository.findAll().stream()
                 .map(eventEntity -> new EventResponseEntity(eventEntity.getId(),
-                        eventEntity.getTimeStart(),
-                        eventEntity.getTimeEnd(),
+                        eventEntity.getTimeStart().toLocalDateTime(),
+                        eventEntity.getTimeEnd().toLocalDateTime(),
                         eventEntity.getUser().getUsername(),
                         eventEntity.getType().getName()))
                 .collect(Collectors.toList());
