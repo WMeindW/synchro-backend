@@ -84,8 +84,7 @@ public class AuthenticationService {
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
         if (!validationUtil.loginCheck(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
-        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword())))
-            return Optional.empty();
+        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) return Optional.empty();
         return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString(), user.getUsername()));
     }
 
