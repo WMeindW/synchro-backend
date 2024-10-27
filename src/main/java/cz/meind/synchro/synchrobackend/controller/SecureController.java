@@ -3,6 +3,7 @@ package cz.meind.synchro.synchrobackend.controller;
 import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
+import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.events.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,14 @@ public class SecureController extends Controller {
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok("Success");
+    }
+
+    @PostMapping(value = "/edit-event", produces = "text/html")
+    @CrossOrigin
+    public ResponseEntity<?> editEvent(@RequestBody EditEventDto editEventDto, HttpServletRequest request) {
+        //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        System.out.println(editEventDto);
         return ResponseEntity.ok("Success");
     }
     @CrossOrigin
