@@ -55,7 +55,7 @@ public class ScheduleService {
         if (eventTypesService.checkMissing(editEventDto.getType())) return false;
         //if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
         // return false;
-        return true;
+        return saveEditEvent(editEventDto);
     }
 
     public EventsResponse queryEvents() {
@@ -69,6 +69,7 @@ public class ScheduleService {
     }
 
     private boolean saveEditEvent(EditEventDto editEventDto) {
+        eventRepository.updateEventEntityById(userRepository.findByUsername(editEventDto.getUsername()).get(), Timestamp.valueOf(editEventDto.getEnd()), Timestamp.valueOf(editEventDto.getStart()), eventTypeRepository.findEventTypeEntityByName(editEventDto.getType()).get(), editEventDto.getId());
         return true;
     }
 
