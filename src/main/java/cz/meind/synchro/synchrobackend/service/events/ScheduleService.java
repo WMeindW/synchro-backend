@@ -6,6 +6,7 @@ import cz.meind.synchro.synchrobackend.database.repositories.EventRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.EventTypeRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
+import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import cz.meind.synchro.synchrobackend.dto.response.EventResponseEntity;
 import cz.meind.synchro.synchrobackend.dto.response.EventsResponse;
 import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
@@ -45,18 +46,20 @@ public class ScheduleService {
         if (!checkEvent(createEventDto)) return false;
         if (eventTypesService.checkMissing(createEventDto.getType())) return false;
         //if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
-           // return false;
+        // return false;
         return saveEvent(createEventDto);
     }
 
+    public boolean editEvent(EditEventDto editEventDto, String role, HttpServletRequest request) {
+        if (!checkEditEvent(editEventDto)) return false;
+        if (eventTypesService.checkMissing(editEventDto.getType())) return false;
+        //if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
+        // return false;
+        return true;
+    }
+
     public EventsResponse queryEvents() {
-        List<EventResponseEntity> responseEntities = eventRepository.findAll().stream()
-                .map(eventEntity -> new EventResponseEntity(eventEntity.getId(),
-                        eventEntity.getTimeStart().toLocalDateTime(),
-                        eventEntity.getTimeEnd().toLocalDateTime(),
-                        eventEntity.getUser().getUsername(),
-                        eventEntity.getType().getName()))
-                .collect(Collectors.toList());
+        List<EventResponseEntity> responseEntities = eventRepository.findAll().stream().map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getTimeStart().toLocalDateTime(), eventEntity.getTimeEnd().toLocalDateTime(), eventEntity.getUser().getUsername(), eventEntity.getType().getName())).collect(Collectors.toList());
         return new EventsResponse(responseEntities);
     }
 
@@ -65,8 +68,17 @@ public class ScheduleService {
         return true;
     }
 
+    private boolean saveEditEvent(EditEventDto editEventDto) {
+        return true;
+    }
+
     private boolean checkEvent(CreateEventDto createEventDto) {
         if (!validationUtil.loginCheck(createEventDto.getUsername())) return false;
         return validationUtil.validateEvent(createEventDto);
+    }
+
+    private boolean checkEditEvent(EditEventDto editEventDto) {
+        if (!validationUtil.loginCheck(editEventDto.getUsername())) return false;
+        return validationUtil.validateEventEdit(editEventDto);
     }
 }

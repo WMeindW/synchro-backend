@@ -4,12 +4,14 @@ import cz.meind.synchro.synchrobackend.database.entities.EventEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.EventRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
+import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class ValidationUtil {
@@ -43,6 +45,13 @@ public class ValidationUtil {
             if (!(event.getTimeEnd().before(Timestamp.valueOf(createEventDto.getStart())) || Timestamp.valueOf(createEventDto.getEnd()).before(event.getTimeStart())))
                 return false;
         return !(Timestamp.valueOf(createEventDto.getEnd()).before(Timestamp.valueOf(createEventDto.getStart())));
+    }
+
+    public boolean validateEventEdit(EditEventDto editEventDto) {
+        for (EventEntity event : eventRepository.findAllByUser(userRepository.findByUsername(editEventDto.getUsername()).get()))
+            if (!Objects.equals(event.getId(), editEventDto.getId()) && !(event.getTimeEnd().before(Timestamp.valueOf(editEventDto.getStart())) || Timestamp.valueOf(editEventDto.getEnd()).before(event.getTimeStart())))
+                return false;
+        return !(Timestamp.valueOf(editEventDto.getEnd()).before(Timestamp.valueOf(editEventDto.getStart())));
     }
 
     private boolean usernameExists(String username) {

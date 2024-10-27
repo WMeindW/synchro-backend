@@ -36,7 +36,8 @@ public class SecureController extends Controller {
     @CrossOrigin
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
 
@@ -44,9 +45,11 @@ public class SecureController extends Controller {
     @CrossOrigin
     public ResponseEntity<?> editEvent(@RequestBody EditEventDto editEventDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        System.out.println(editEventDto);
+        if (!scheduleService.editEvent(editEventDto, config.getCombinedRole(), request))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
+
     @CrossOrigin
     @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
