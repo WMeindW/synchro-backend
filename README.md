@@ -1,18 +1,18 @@
 # TODO:
 - ## Backend
-    - Editing events admin and user
-    - Blacklist jwt tokens
+    - Deleting events admin and user
     - Clock-in and clock-out functions
     - Monthly statistics / hours worked
     - Polishing
-    - Testing
-    - more functions...
+    - User icons
+    - User file storage
     
 
 - ## Frontend
-  - Editing events
+  - Deleting events
   - Clock-in and clock-out functions
   - Monthly statistics / hours worked
   - Styling pages
   - Polishing
-  - Testing
+  - User icons
+  - User file storage
