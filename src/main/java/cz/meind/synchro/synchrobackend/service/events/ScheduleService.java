@@ -13,6 +13,7 @@ import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -46,14 +47,16 @@ public class ScheduleService {
         if (!checkEvent(createEventDto)) return false;
         if (!hasPermissions(request, createEventDto.getUsername())) return false;
         if (eventTypesService.checkMissing(createEventDto.getType())) return false;
-        return saveEvent(createEventDto);
+        saveEvent(createEventDto);
+        return true;
     }
 
     public boolean editEvent(EditEventDto editEventDto, String role, HttpServletRequest request) {
         if (!checkEditEvent(editEventDto)) return false;
         if (!hasPermissions(request, editEventDto.getUsername())) return false;
         if (eventTypesService.checkMissing(editEventDto.getType())) return false;
-        return saveEditEvent(editEventDto);
+        saveEditEvent(editEventDto);
+        return true;
     }
 
     public EventsResponse queryEvents() {
@@ -65,14 +68,14 @@ public class ScheduleService {
         return jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(username) || jwtUtil.extractClaims(securityService.extractCookie(request)).get("role").toString().equals(synchroConfig.getAdminRole());
     }
 
-    private boolean saveEvent(CreateEventDto createEventDto) {
+    @Async
+    protected void saveEvent(CreateEventDto createEventDto) {
         eventRepository.save(new EventEntity(eventTypeRepository.findEventTypeEntityByName(createEventDto.getType()).get(), userRepository.findByUsername(createEventDto.getUsername()).get(), Timestamp.valueOf(createEventDto.getEnd()), Timestamp.valueOf(createEventDto.getStart())));
-        return true;
     }
 
-    private boolean saveEditEvent(EditEventDto editEventDto) {
+    @Async
+    protected void saveEditEvent(EditEventDto editEventDto) {
         eventRepository.updateEventEntityById(userRepository.findByUsername(editEventDto.getUsername()).get(), Timestamp.valueOf(editEventDto.getEnd()), Timestamp.valueOf(editEventDto.getStart()), eventTypeRepository.findEventTypeEntityByName(editEventDto.getType()).get(), editEventDto.getId());
-        return true;
     }
 
     private boolean checkEvent(CreateEventDto createEventDto) {

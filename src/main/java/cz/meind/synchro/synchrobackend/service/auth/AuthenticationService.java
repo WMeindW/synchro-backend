@@ -15,6 +15,7 @@ import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
