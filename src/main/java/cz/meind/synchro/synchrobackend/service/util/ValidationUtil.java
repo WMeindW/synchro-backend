@@ -61,7 +61,6 @@ public class ValidationUtil {
         return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
 
-
     public String hashPassword(String password) {
         StringBuilder hexString = new StringBuilder();
         for (byte b : toHashBytes(password)) {

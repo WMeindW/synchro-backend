@@ -44,23 +44,25 @@ public class ScheduleService {
 
     public boolean createEvent(CreateEventDto createEventDto, String role, HttpServletRequest request) {
         if (!checkEvent(createEventDto)) return false;
+        if (!hasPermissions(request, createEventDto.getUsername())) return false;
         if (eventTypesService.checkMissing(createEventDto.getType())) return false;
-        //if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
-        // return false;
         return saveEvent(createEventDto);
     }
 
     public boolean editEvent(EditEventDto editEventDto, String role, HttpServletRequest request) {
         if (!checkEditEvent(editEventDto)) return false;
+        if (!hasPermissions(request, editEventDto.getUsername())) return false;
         if (eventTypesService.checkMissing(editEventDto.getType())) return false;
-        //if (role.equals(synchroConfig.getCombinedRole()) && !jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(createEventDto.getUsername()))
-        // return false;
         return saveEditEvent(editEventDto);
     }
 
     public EventsResponse queryEvents() {
         List<EventResponseEntity> responseEntities = eventRepository.findAll().stream().map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getTimeStart().toLocalDateTime(), eventEntity.getTimeEnd().toLocalDateTime(), eventEntity.getUser().getUsername(), eventEntity.getType().getName())).collect(Collectors.toList());
         return new EventsResponse(responseEntities);
+    }
+
+    private boolean hasPermissions(HttpServletRequest request, String username) {
+        return jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(username) || jwtUtil.extractClaims(securityService.extractCookie(request)).get("role").toString().equals(synchroConfig.getAdminRole());
     }
 
     private boolean saveEvent(CreateEventDto createEventDto) {
