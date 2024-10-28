@@ -4,9 +4,9 @@ import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class SecurityService {
 
     private final UserRepository userRepository;

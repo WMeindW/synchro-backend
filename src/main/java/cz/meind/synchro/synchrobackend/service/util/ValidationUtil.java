@@ -6,14 +6,13 @@ import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
 
-@Component
+@Service
 public class ValidationUtil {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;

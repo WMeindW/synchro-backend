@@ -15,13 +15,13 @@ import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Service
 public class AuthenticationService {
     private final UserRepository userRepository;
 
