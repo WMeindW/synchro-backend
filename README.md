@@ -6,6 +6,7 @@
     - Monthly statistics / hours worked
     - Polishing
     - Testing
+    - more functions...
     
 
 - ## Frontend
