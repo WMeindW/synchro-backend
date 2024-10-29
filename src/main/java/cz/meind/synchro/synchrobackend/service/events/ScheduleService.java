@@ -69,7 +69,7 @@ public class ScheduleService {
     }
 
     public EventsResponse queryEvents() {
-        List<EventResponseEntity> responseEntities = eventRepository.findAll().stream().map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getTimeStart().toLocalDateTime(), eventEntity.getTimeEnd().toLocalDateTime(), eventEntity.getUser().getUsername(), eventEntity.getType().getName())).collect(Collectors.toList());
+        List<EventResponseEntity> responseEntities = eventRepository.findAll().stream().filter(eventEntity -> !eventEntity.isDeleted()).map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getTimeStart().toLocalDateTime(), eventEntity.getTimeEnd().toLocalDateTime(), eventEntity.getUser().getUsername(), eventEntity.getType().getName())).collect(Collectors.toList());
         return new EventsResponse(responseEntities);
     }
 
@@ -81,7 +81,7 @@ public class ScheduleService {
     protected void deleteEvent(String username, Long id) {
         eventRepository.findAllByUser(userRepository.findByUsername(username).get()).forEach(eventEntity -> {
             if (id.equals(eventEntity.getId())) {
-                eventRepository.delete(eventEntity);
+                eventRepository.updateEventEntityDeletedById(true, id);
             }
         });
     }

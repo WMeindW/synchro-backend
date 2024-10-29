@@ -24,6 +24,8 @@ public class EventEntity {
     @Column(nullable = false)
     private Timestamp timeEnd;
 
+    @Column(nullable = false)
+    private boolean deleted;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -37,6 +39,7 @@ public class EventEntity {
         this.user = user;
         this.timeEnd = timeEnd;
         this.timeStart = timeStart;
+        this.deleted = false;
     }
 
     public EventEntity() {

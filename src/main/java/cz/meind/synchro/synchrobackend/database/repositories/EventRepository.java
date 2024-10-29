@@ -15,6 +15,12 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<EventEntity, Long> {
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE EventEntity e SET e.deleted = :deleted WHERE e.id = :id")
+    void updateEventEntityDeletedById(@Param("deleted") Boolean deleted, @Param("id") Long id);
+
     @Transactional
     @Modifying
     @Query("UPDATE EventEntity e SET e.timeEnd = :timeEnd, e.timeStart = :timeStart, e.type = :type, e.user = :user WHERE e.id = :id")
