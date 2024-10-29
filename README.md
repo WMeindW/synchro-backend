@@ -1,6 +1,5 @@
 # TODO:
 - ## Backend
-    - Deleting events admin and user
     - Clock-in and clock-out functions
     - Monthly statistics / hours worked
     - Polishing
@@ -9,7 +8,6 @@
     
 
 - ## Frontend
-  - Deleting events
   - Clock-in and clock-out functions
   - Monthly statistics / hours worked
   - Styling pages
