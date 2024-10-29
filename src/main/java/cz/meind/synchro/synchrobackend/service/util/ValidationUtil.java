@@ -41,14 +41,14 @@ public class ValidationUtil {
 
     public boolean validateEvent(CreateEventDto createEventDto) {
         for (EventEntity event : eventRepository.findAllByUser(userRepository.findByUsername(createEventDto.getUsername()).get()))
-            if (!(event.getTimeEnd().before(Timestamp.valueOf(createEventDto.getStart())) || Timestamp.valueOf(createEventDto.getEnd()).before(event.getTimeStart())))
+            if (!event.isDeleted() && !(event.getTimeEnd().before(Timestamp.valueOf(createEventDto.getStart())) || Timestamp.valueOf(createEventDto.getEnd()).before(event.getTimeStart())))
                 return false;
         return !(Timestamp.valueOf(createEventDto.getEnd()).before(Timestamp.valueOf(createEventDto.getStart())));
     }
 
     public boolean validateEventEdit(EditEventDto editEventDto) {
         for (EventEntity event : eventRepository.findAllByUser(userRepository.findByUsername(editEventDto.getUsername()).get()))
-            if (!Objects.equals(event.getId(), editEventDto.getId()) && !(event.getTimeEnd().before(Timestamp.valueOf(editEventDto.getStart())) || Timestamp.valueOf(editEventDto.getEnd()).before(event.getTimeStart())))
+            if (!event.isDeleted() && !Objects.equals(event.getId(), editEventDto.getId()) && !(event.getTimeEnd().before(Timestamp.valueOf(editEventDto.getStart())) || Timestamp.valueOf(editEventDto.getEnd()).before(event.getTimeStart())))
                 return false;
         return !(Timestamp.valueOf(editEventDto.getEnd()).before(Timestamp.valueOf(editEventDto.getStart())));
     }
