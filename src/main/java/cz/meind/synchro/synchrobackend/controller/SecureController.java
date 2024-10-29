@@ -35,7 +35,8 @@ public class SecureController extends Controller {
 
     @PostMapping(value = "/create-event", produces = "text/html")
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
@@ -43,15 +44,26 @@ public class SecureController extends Controller {
 
     @PostMapping(value = "/edit-event", produces = "text/html")
     public ResponseEntity<?> editEvent(@RequestBody EditEventDto editEventDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!scheduleService.editEvent(editEventDto, config.getCombinedRole(), request))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok("Success");
+    }
+
+    @PostMapping(value = "/delete-event", produces = "text/html")
+    public ResponseEntity<?> deleteEvent(@RequestBody EditEventDto editEventDto, HttpServletRequest request) {
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!scheduleService.deleteEvent(editEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok("Success");
     }
 
     @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(scheduleService.queryEvents());
     }
 }

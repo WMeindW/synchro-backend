@@ -59,6 +59,14 @@ public class ScheduleService {
         return true;
     }
 
+    public boolean deleteEvent(EditEventDto editEventDto, String role, HttpServletRequest request) {
+        if (!validationUtil.loginCheck(editEventDto.getUsername())) return false;
+        if (!hasPermissions(request, editEventDto.getUsername())) return false;
+        if (eventTypesService.checkMissing(editEventDto.getType())) return false;
+        deleteEvent(editEventDto.getUsername(), editEventDto.getId());
+        return true;
+    }
+
     public EventsResponse queryEvents() {
         List<EventResponseEntity> responseEntities = eventRepository.findAll().stream().map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getTimeStart().toLocalDateTime(), eventEntity.getTimeEnd().toLocalDateTime(), eventEntity.getUser().getUsername(), eventEntity.getType().getName())).collect(Collectors.toList());
         return new EventsResponse(responseEntities);
@@ -66,6 +74,15 @@ public class ScheduleService {
 
     private boolean hasPermissions(HttpServletRequest request, String username) {
         return jwtUtil.extractClaims(securityService.extractCookie(request)).getSubject().equals(username) || jwtUtil.extractClaims(securityService.extractCookie(request)).get("role").toString().equals(synchroConfig.getAdminRole());
+    }
+
+    @Async
+    protected void deleteEvent(String username, Long id) {
+        eventRepository.findAllByUser(userRepository.findByUsername(username).get()).forEach(eventEntity -> {
+            if (id.equals(eventEntity.getId())) {
+                eventRepository.delete(eventEntity);
+            }
+        });
     }
 
     @Async
