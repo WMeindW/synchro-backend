@@ -59,6 +59,7 @@ public class ScheduleService {
         return true;
     }
 
+
     public boolean deleteEvent(EditEventDto editEventDto, String role, HttpServletRequest request) {
         if (!validationUtil.loginCheck(editEventDto.getUsername())) return false;
         if (!hasPermissions(request, editEventDto.getUsername())) return false;
