@@ -33,4 +33,4 @@ build/
 .vscode/
 /service.log/
 /src/main/resources/application.properties
-.mvn
+/.mvn/
