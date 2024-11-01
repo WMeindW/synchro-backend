@@ -15,13 +15,14 @@ import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Service
 public class AuthenticationService {
     private final UserRepository userRepository;
 
@@ -84,8 +85,7 @@ public class AuthenticationService {
     public Optional<LoginResponse> login(LoginUserDto loginUserDto) {
         if (!validationUtil.loginCheck(loginUserDto.getUsername())) return Optional.empty();
         UserEntity user = userRepository.findByUsername(loginUserDto.getUsername()).get();
-        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword())))
-            return Optional.empty();
+        if (!user.getPassword().equals(validationUtil.hashPassword(loginUserDto.getPassword()))) return Optional.empty();
         return Optional.of(new LoginResponse(generateToken(user, config.getExpirationTime()), config.getExpirationTime(), user.getRole().toString(), user.getUsername()));
     }
 

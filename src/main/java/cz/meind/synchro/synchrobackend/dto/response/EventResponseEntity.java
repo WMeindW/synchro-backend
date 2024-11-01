@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
 public class EventResponseEntity {
 
-    public EventResponseEntity(Long id, Timestamp timeStart, Timestamp timeEnd, String username, String type) {
+    public EventResponseEntity(Long id, LocalDateTime timeStart, LocalDateTime timeEnd, String username, String type) {
         this.id = id;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
@@ -19,9 +20,9 @@ public class EventResponseEntity {
 
     private Long id;
 
-    private Timestamp timeStart;
+    private LocalDateTime timeStart;
 
-    private Timestamp timeEnd;
+    private LocalDateTime timeEnd;
 
     private String username;
 

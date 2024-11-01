@@ -5,14 +5,14 @@ import cz.meind.synchro.synchrobackend.database.repositories.BlacklistJwtReposit
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 import java.util.Map;
 
-@Component
+@Service
 public class JwtUtil {
 
     private final SynchroConfig config;
