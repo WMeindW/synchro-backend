@@ -5,19 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "check")
+@Table(name = "checks")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CheckEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Timestamp checkIn;
@@ -28,8 +26,13 @@ public class CheckEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    public CheckEntity(Timestamp checkIn, UserEntity user) {
-        this.checkIn = checkIn;
+    public CheckEntity(UserEntity user, Timestamp checkIn) {
         this.user = user;
+        this.checkIn = checkIn;
+    }
+
+    public CheckEntity() {
+
     }
 }
+

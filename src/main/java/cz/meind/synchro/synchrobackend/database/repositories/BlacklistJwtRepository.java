@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface BlacklistJwtRepository extends JpaRepository<BlacklistJwtEntity, Long> {
-
     Optional<BlacklistJwtEntity> findBlacklistJwtEntityByJwtToken(String token);
 }
