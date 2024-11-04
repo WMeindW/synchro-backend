@@ -72,4 +72,20 @@
            timeToLiveSeconds="7200"
            memoryStoreEvictionPolicy="LRU"
            overflowToDisk="false"/>
+
+    <cache name="cz.meind.synchro.synchrobackend.database.entities.UserEntity.checks"
+           maxEntriesLocalHeap="1000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="7200"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"/>
+
+    <cache name="cz.meind.synchro.synchrobackend.database.entities.CheckEntity"
+           maxEntriesLocalHeap="1000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="7200"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"/>
 </ehcache>

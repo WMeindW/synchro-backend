@@ -26,6 +26,7 @@ public class EventEntity {
 
     @Column(nullable = false)
     private boolean deleted;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;

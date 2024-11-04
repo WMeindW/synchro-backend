@@ -39,7 +39,7 @@ public class SecureController extends Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok("Success");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(value = "/edit-event", produces = "text/html")
@@ -48,7 +48,7 @@ public class SecureController extends Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!scheduleService.editEvent(editEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok("Success");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(value = "/delete-event", produces = "text/html")
@@ -57,7 +57,7 @@ public class SecureController extends Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!scheduleService.deleteEvent(editEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok("Success");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/query-event", produces = "application/json")
@@ -66,4 +66,5 @@ public class SecureController extends Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(scheduleService.queryEvents());
     }
+
 }
