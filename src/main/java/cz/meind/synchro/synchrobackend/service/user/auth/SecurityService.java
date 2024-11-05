@@ -1,4 +1,4 @@
-package cz.meind.synchro.synchrobackend.service.auth;
+package cz.meind.synchro.synchrobackend.service.user.auth;
 
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;

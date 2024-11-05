@@ -9,7 +9,7 @@ import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import cz.meind.synchro.synchrobackend.dto.response.EventResponseEntity;
 import cz.meind.synchro.synchrobackend.dto.response.EventsResponse;
-import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
+import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.servlet.http.HttpServletRequest;

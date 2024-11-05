@@ -52,7 +52,6 @@ public class ValidationUtil {
                 return false;
         return !(Timestamp.valueOf(editEventDto.getEnd()).before(Timestamp.valueOf(editEventDto.getStart())));
     }
-
     private boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }

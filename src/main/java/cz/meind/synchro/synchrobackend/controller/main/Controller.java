@@ -2,7 +2,7 @@ package cz.meind.synchro.synchrobackend.controller.main;
 
 import cz.meind.synchro.synchrobackend.config.Routes;
 import cz.meind.synchro.synchrobackend.config.SynchroConfig;
-import cz.meind.synchro.synchrobackend.service.auth.SecurityService;
+import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

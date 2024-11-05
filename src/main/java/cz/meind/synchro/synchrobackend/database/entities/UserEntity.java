@@ -30,6 +30,9 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean enabled;
 
+    @Column(nullable = false)
+    private boolean checkedIn;
+
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false)
@@ -48,6 +51,7 @@ public class UserEntity {
         this.password = password;
         this.enabled = enabled;
         this.role = role;
+        this.checkedIn = false;
     }
 
     // Constructors
