@@ -25,21 +25,23 @@ public class AttendanceService {
         this.validationUtil = validationUtil;
     }
 
-    public boolean isCheckedIn(HttpServletRequest request, String username) {
+    public Boolean isCheckedIn(HttpServletRequest request, String username) {
         if (!validationUtil.loginCheck(username)) return false;
-        if (!hasPermissions(request, username)) return false;
+        //if (!hasPermissions(request, username)) return false;
         return userRepository.findByUsername(username).get().isCheckedIn();
     }
 
     public boolean checkUser(HttpServletRequest request, String username) {
+        System.out.println(username);
         if (!validationUtil.loginCheck(username)) return false;
-        if (!hasPermissions(request, username)) return false;
+        //if (!hasPermissions(request, username)) return false;
         updatedChecked(username);
         return true;
     }
 
     @Async
     protected void updatedChecked(String username) {
+        System.out.println(username);
         userRepository.updateUserChecked(username, !userRepository.findByUsername(username).get().isCheckedIn());
     }
 
