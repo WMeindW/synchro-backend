@@ -4,6 +4,7 @@ import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
+import cz.meind.synchro.synchrobackend.service.user.AttendanceService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.events.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,11 +21,13 @@ public class SecureController extends Controller {
 
     private final SynchroConfig config;
     private final ScheduleService scheduleService;
+    private final AttendanceService attendanceService;
 
-    public SecureController(SecurityService securityService, SynchroConfig config, ScheduleService scheduleService) {
+    public SecureController(SecurityService securityService, SynchroConfig config, ScheduleService scheduleService, AttendanceService attendanceService) {
         super(securityService);
         this.config = config;
         this.scheduleService = scheduleService;
+        this.attendanceService = attendanceService;
     }
 
     @GetMapping(value = "/index.html", produces = "text/html")
@@ -64,6 +67,22 @@ public class SecureController extends Controller {
         if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(scheduleService.queryEvents());
+    }
+
+    @GetMapping(value = "/query-attendance", produces = "application/json")
+    public ResponseEntity<?> queryAttendance(@RequestParam String username, HttpServletRequest request) {
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(attendanceService.isCheckedIn(request, username));
+    }
+
+    @PostMapping(value = "/check-attendance", produces = "text/html")
+    public ResponseEntity<?> checkAttendance(@RequestBody String username, HttpServletRequest request) {
+        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (attendanceService.checkUser(request, username))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
