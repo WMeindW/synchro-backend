@@ -22,6 +22,7 @@ public class CheckEntity {
 
     private Timestamp checkOut;
 
+    private Boolean checked;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -29,6 +30,7 @@ public class CheckEntity {
     public CheckEntity(UserEntity user, Timestamp checkIn) {
         this.user = user;
         this.checkIn = checkIn;
+        this.checked = true;
     }
 
     public CheckEntity() {
