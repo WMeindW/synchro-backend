@@ -34,7 +34,7 @@ public class AttendanceService {
 
     public Boolean isCheckedIn(HttpServletRequest request, String username) {
         if (!validationUtil.loginCheck(username)) return false;
-        //if (!hasPermissions(request, username)) return false;
+        // if (!hasPermissions(request, username)) return false;
         return userRepository.findByUsername(username).get().isCheckedIn();
     }
 
