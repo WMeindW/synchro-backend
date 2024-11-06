@@ -54,7 +54,6 @@ public class UserEntity {
         this.checkedIn = false;
     }
 
-    // Constructors
     public UserEntity() {
     }
 

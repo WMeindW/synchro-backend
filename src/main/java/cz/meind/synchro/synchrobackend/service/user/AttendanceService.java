@@ -48,11 +48,10 @@ public class AttendanceService {
 
     @Async
     protected void updatedCheckEntity(String username) {
-        if (userRepository.findByUsername(username).get().isCheckedIn()) {
+        if (userRepository.findByUsername(username).get().isCheckedIn())
             checkRepository.updateChecked(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now()));
-        } else {
+        else
             checkRepository.save(new CheckEntity(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now())));
-        }
     }
 
     @Async
