@@ -35,37 +35,49 @@ public class SecureController extends Controller {
         return super.handleRequestsSecureRedirect(request, response, config.getCombinedRole());
     }
 
+    @CrossOrigin
     @PostMapping(value = "/create-event", produces = "text/html")
     public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+        /* if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+         */
         if (!scheduleService.createEvent(createEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping(value = "/edit-event", produces = "text/html")
     public ResponseEntity<?> editEvent(@RequestBody EditEventDto editEventDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+        /* if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+         */
         if (!scheduleService.editEvent(editEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping(value = "/delete-event", produces = "text/html")
     public ResponseEntity<?> deleteEvent(@RequestBody EditEventDto editEventDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+        /*if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+         */
         if (!scheduleService.deleteEvent(editEventDto, config.getCombinedRole(), request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+       /* if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        */
         return ResponseEntity.ok(scheduleService.queryEvents());
     }
 
