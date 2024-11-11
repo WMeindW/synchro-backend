@@ -26,14 +26,16 @@
 
 # TODO:
 ## Backend
-  - MOTD
-  - Monthly statistics / hours worked
-  - Polishing
-  - Testing
+    - User organization, deletion, editing
+    - MOTD
+    - Monthly statistics / hours worked
+    - Polishing
+    - Testing
 
 ## Frontend
-  - MOTD
-  - Monthly statistics / hours worked
-  - Styling pages
-  - Polishing
-  - Testing
+    - User organization, deletion, editing
+    - MOTD
+    - Monthly statistics / hours worked
+    - Styling pages
+    - Polishing
+    - Testing
