@@ -35,7 +35,7 @@ public class AdminController extends Controller {
         return super.handleRequestsSecureRedirect(request, response, config.getAdminRole());
     }
 
-    @PostMapping(value = "/create", produces = "application/json")
+    @PostMapping(value = "/create-user", produces = "application/json")
     public ResponseEntity<?> createAccount(@RequestBody CreateUserDto createUserDto, HttpServletRequest request) {
         if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<LoginResponse> loginResponse = authenticationService.createUser(createUserDto);
