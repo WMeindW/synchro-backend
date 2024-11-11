@@ -12,12 +12,18 @@ public class CreateUserDto {
 
     private String role;
 
+    private String email;
+
+    private String phone;
+
     @Override
     public String toString() {
         return "CreateUserDto{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 }

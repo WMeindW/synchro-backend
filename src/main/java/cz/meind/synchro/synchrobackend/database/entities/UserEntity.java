@@ -33,6 +33,12 @@ public class UserEntity {
     @Column(nullable = false)
     private boolean checkedIn;
 
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String phone;
+
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false)
@@ -54,6 +60,16 @@ public class UserEntity {
         this.checkedIn = false;
     }
 
+    public UserEntity(RoleEntity role, String email, String phone, Boolean enabled, String username, String password) {
+        this.role = role;
+        this.phone = phone;
+        this.email = email;
+        this.checkedIn = false;
+        this.enabled = enabled;
+        this.password = password;
+        this.username = username;
+    }
+
     public UserEntity() {
     }
 
@@ -64,6 +80,8 @@ public class UserEntity {
         UserEntity that = (UserEntity) o;
         return Objects.equals(username, that.username);
     }
+
+
 
     @Override
     public String toString() {
