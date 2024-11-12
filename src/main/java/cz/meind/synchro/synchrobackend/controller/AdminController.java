@@ -5,6 +5,7 @@ import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
+import cz.meind.synchro.synchrobackend.service.user.UserService;
 import cz.meind.synchro.synchrobackend.service.user.auth.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,11 +24,13 @@ public class AdminController extends Controller {
     private final SynchroConfig config;
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
-    public AdminController(SecurityService securityService, AuthenticationService authenticationService, SynchroConfig config) {
+    public AdminController(SecurityService securityService, AuthenticationService authenticationService, SynchroConfig config, UserService userService) {
         super(securityService);
         this.authenticationService = authenticationService;
         this.config = config;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/index.html", produces = "text/html")
@@ -37,11 +40,18 @@ public class AdminController extends Controller {
 
     @CrossOrigin
     @PostMapping(value = "/create-user", produces = "application/json")
-    public ResponseEntity<?> createAccount(@RequestBody CreateUserDto createUserDto, HttpServletRequest request) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<LoginResponse> loginResponse = authenticationService.createUser(createUserDto);
         if (loginResponse.isPresent()) return ResponseEntity.ok(loginResponse.get());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/query-user", produces = "application/json")
+    public ResponseEntity<?> queryUser(HttpServletRequest request) {
+        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(userService.queryUserList(request));
     }
 
 
