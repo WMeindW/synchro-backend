@@ -27,7 +27,7 @@ public class UserService {
 
     public UserListResponse queryUserList(HttpServletRequest request) {
         if (!hasPermissions(request)) return new UserListResponse(new ArrayList<>());
-        return new UserListResponse(userRepository.findAll().stream().map(user -> new UserResponseEntity(user.getUsername(), user.getRole().toString(), user.getEnabled().toString())).toList());
+        return new UserListResponse(userRepository.findAll().stream().map(user -> new UserResponseEntity(user.getId().toString(), user.getUsername(), user.getRole().toString(), user.getEnabled().toString())).toList());
     }
 
     private boolean hasPermissions(HttpServletRequest request) {
