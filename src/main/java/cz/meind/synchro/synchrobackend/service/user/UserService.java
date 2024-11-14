@@ -7,10 +7,10 @@ import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
 import cz.meind.synchro.synchrobackend.dto.response.UserResponseEntity;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -33,12 +33,15 @@ public class UserService {
     }
 
     public boolean deleteUser(HttpServletRequest request, DeleteUserDto deleteUserDto) {
-        if (!hasPermissions(request)) return false;
+        //if (!hasPermissions(request)) return false;
+
         //TODO: check permissions
         return true;
     }
 
     private boolean hasPermissions(HttpServletRequest request) {
-        return true;//jwtUtil.extractClaims(securityService.extractCookie(request)).get("role").toString().equals(synchroConfig.getAdminRole());
+        Claims c = jwtUtil.extractClaims(securityService.extractCookie(request));
+        if (c == null) return false;
+        return c.get("role").toString().equals(synchroConfig.getAdminRole());
     }
 }

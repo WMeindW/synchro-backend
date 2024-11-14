@@ -1,10 +1,13 @@
 package cz.meind.synchro.synchrobackend.service.user.auth;
 
+import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SecurityService {
@@ -40,7 +43,8 @@ public class SecurityService {
     }
 
     private boolean validateToken(String token, String role) {
-        if (userRepository.findByUsername(jwtUtil.extractClaims(token).getSubject()).isEmpty()) return false;
+        Optional<UserEntity> u = userRepository.findByUsername(jwtUtil.extractClaims(token).getSubject());
+        if (u.isEmpty() || !u.get().getEnabled()) return false;
         if (!role.contains(jwtUtil.extractClaims(token).get("role").toString())) return false;
         return jwtUtil.isTokenValid(token);
     }
