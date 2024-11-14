@@ -33,10 +33,8 @@ public class UserEntity {
     @Column(nullable = false)
     private boolean checkedIn;
 
-    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String phone;
 
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -50,7 +48,7 @@ public class UserEntity {
 
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<EventEntity> checks;
+    private List<CheckEntity> checks;
 
     public UserEntity(String username, String password, Boolean enabled, RoleEntity role) {
         this.username = username;
