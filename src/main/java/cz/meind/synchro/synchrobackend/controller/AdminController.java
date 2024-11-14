@@ -4,7 +4,9 @@ package cz.meind.synchro.synchrobackend.controller;
 import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.DeleteUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
+import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
 import cz.meind.synchro.synchrobackend.service.user.UserService;
 import cz.meind.synchro.synchrobackend.service.user.auth.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -48,10 +51,21 @@ public class AdminController extends Controller {
     }
 
     @CrossOrigin
+    @PostMapping(value = "/delete-user", produces = "application/json")
+    public ResponseEntity<?> deleteUser(@RequestBody DeleteUserDto deleteUserDto, HttpServletRequest request) {
+        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (userService.deleteUser(request, deleteUserDto)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+
+    @CrossOrigin
     @GetMapping(value = "/query-user", produces = "application/json")
     public ResponseEntity<?> queryUser(HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(userService.queryUserList(request));
+        Optional<UserListResponse> responses = userService.queryUserList(request);
+        if (responses.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(responses.get());
     }
 
 

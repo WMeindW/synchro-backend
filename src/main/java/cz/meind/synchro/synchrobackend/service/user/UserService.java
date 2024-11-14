@@ -2,6 +2,7 @@ package cz.meind.synchro.synchrobackend.service.user;
 
 import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
+import cz.meind.synchro.synchrobackend.dto.request.DeleteUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
 import cz.meind.synchro.synchrobackend.dto.response.UserResponseEntity;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,9 +27,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserListResponse queryUserList(HttpServletRequest request) {
-        if (!hasPermissions(request)) return new UserListResponse(new ArrayList<>());
-        return new UserListResponse(userRepository.findAll().stream().map(user -> new UserResponseEntity(user.getId().toString(), user.getUsername(), user.getRole().toString(), user.getEmail(), user.getPhone(), user.getEnabled().toString())).toList());
+    public Optional<UserListResponse> queryUserList(HttpServletRequest request) {
+        if (!hasPermissions(request)) return Optional.empty();
+        return Optional.of(new UserListResponse(userRepository.findAll().stream().map(user -> new UserResponseEntity(user.getId().toString(), user.getUsername(), user.getRole().toString(), user.getEmail(), user.getPhone(), user.getEnabled().toString())).toList()));
+    }
+
+    public boolean deleteUser(HttpServletRequest request, DeleteUserDto deleteUserDto) {
+        if (!hasPermissions(request)) return false;
+        //TODO: check permissions
+        return true;
     }
 
     private boolean hasPermissions(HttpServletRequest request) {
