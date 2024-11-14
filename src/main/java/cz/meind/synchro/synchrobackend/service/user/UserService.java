@@ -36,6 +36,7 @@ public class UserService {
 
     public boolean deleteUser(HttpServletRequest request, DeleteUserDto deleteUserDto) {
         //if (!hasPermissions(request)) return false;
+        if (deleteUserDto.getUsername().equals(synchroConfig.getAdminUsername())) return false;
         Optional<UserEntity> u = userRepository.findByUsername(deleteUserDto.getUsername());
         if (u.isEmpty() || !u.get().getId().toString().equals(deleteUserDto.getId())) return false;
         updateSetEnabled(deleteUserDto.getUsername());
