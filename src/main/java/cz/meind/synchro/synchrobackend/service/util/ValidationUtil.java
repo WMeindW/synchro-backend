@@ -42,7 +42,7 @@ public class ValidationUtil {
     }
 
     public boolean editCheck(EditUserDto editUserDto) {
-        if (editUserDto.getUsername().equals(synchroConfig.getAdminUsername())) return false;
+        if (editUserDto.getId().equals(userRepository.findByUsername(synchroConfig.getAdminUsername()).get().getId().toString())) return false;
         if (roleRepository.findRoleEntityByName(editUserDto.getRole()).isEmpty()) return false;
         if (editUserDto.getEmail().length() > 60 || editUserDto.getPhone().length() > 12) return false;
         if (!validateUsername(editUserDto.getUsername())) return false;

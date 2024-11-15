@@ -33,8 +33,10 @@ public class UserEntity {
     @Column(nullable = false)
     private boolean checkedIn;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String phone;
 
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -56,6 +58,8 @@ public class UserEntity {
         this.enabled = enabled;
         this.role = role;
         this.checkedIn = false;
+        this.phone = "";
+        this.email = "";
     }
 
     public UserEntity(RoleEntity role, String email, String phone, Boolean enabled, String username, String password) {
