@@ -16,7 +16,7 @@ public class EditUserDto {
 
     private String password;
 
-    private String id;
+    private Long id;
 
     @Override
     public String toString() {

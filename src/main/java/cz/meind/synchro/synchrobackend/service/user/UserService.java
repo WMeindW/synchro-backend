@@ -58,6 +58,9 @@ public class UserService {
 
     public boolean editUser(HttpServletRequest request, EditUserDto editUserDto) {
         //if (!hasPermissions(request)) return false;
+        Optional<UserEntity> u = userRepository.findById(editUserDto.getId());
+        if (u.isEmpty()) return false;
+        if (u.get().getUsername().equals(synchroConfig.getAdminUsername())) return false;
         if (!validationUtil.editCheck(editUserDto)) return false;
         updateUser(editUserDto);
         return true;
@@ -71,7 +74,10 @@ public class UserService {
 
     @Async
     protected void updateUser(EditUserDto u) {
-        userRepository.updateUserEntityById(u.getId(), u.getUsername(), validationUtil.hashPassword(u.getPassword()), roleRepository.findRoleEntityByName(u.getRole()).get(), u.getEmail(), u.getPhone());
+        if (!u.getPassword().isEmpty())
+            userRepository.updateUserEntityById(u.getId(), u.getUsername(), validationUtil.hashPassword(u.getPassword()), roleRepository.findRoleEntityByName(u.getRole()).get(), u.getEmail(), u.getPhone());
+        else
+            userRepository.updateUserEntityById(u.getId(), u.getUsername(), roleRepository.findRoleEntityByName(u.getRole()).get(), u.getEmail(), u.getPhone());
     }
 
     @Async
