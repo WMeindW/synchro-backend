@@ -5,6 +5,7 @@ import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.DeleteUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.EditUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
 import cz.meind.synchro.synchrobackend.service.user.UserService;
@@ -44,7 +45,8 @@ public class AdminController extends Controller {
     @CrossOrigin
     @PostMapping(value = "/create-user", produces = "application/json")
     public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<LoginResponse> loginResponse = authenticationService.createUser(createUserDto);
         if (loginResponse.isPresent()) return ResponseEntity.ok(loginResponse.get());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -68,6 +70,13 @@ public class AdminController extends Controller {
         return ResponseEntity.ok(responses.get());
     }
 
+    @CrossOrigin
+    @PostMapping(value = "/edit-user", produces = "application/json")
+    public ResponseEntity<?> editUser(@RequestBody EditUserDto editUserDto, HttpServletRequest request) {
+        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (userService.editUser(request, editUserDto)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 }
 

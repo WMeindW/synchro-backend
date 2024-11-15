@@ -1,5 +1,6 @@
 package cz.meind.synchro.synchrobackend.database.repositories;
 
+import cz.meind.synchro.synchrobackend.database.entities.RoleEntity;
 import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,5 +30,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Modifying
     @Query("UPDATE UserEntity u SET u.enabled = :enabled WHERE u.username = :username")
     void updateUserEnabledByUsername(@Param("username") String username, @Param("enabled") boolean enabled);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE UserEntity u SET u.username = :username, u.password = :password, u.email = :email, u.phone = :phone, u.role = :role WHERE u.id = :id")
+    void updateUserEntityById(@Param("id") String id, @Param("username") String username, @Param("password") String password, @Param("role") RoleEntity role, @Param("email") String email, @Param("phone") String phone);
 
 }

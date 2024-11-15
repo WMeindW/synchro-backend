@@ -1,10 +1,13 @@
 package cz.meind.synchro.synchrobackend.service.util;
 
+import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.database.entities.EventEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.EventRepository;
+import cz.meind.synchro.synchrobackend.database.repositories.RoleRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
+import cz.meind.synchro.synchrobackend.dto.request.EditUserDto;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +19,14 @@ import java.util.Objects;
 public class ValidationUtil {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final SynchroConfig synchroConfig;
+    private final RoleRepository roleRepository;
 
-    public ValidationUtil(UserRepository userRepository, EventRepository eventRepository) {
+    public ValidationUtil(UserRepository userRepository, EventRepository eventRepository, SynchroConfig synchroConfig, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.synchroConfig = synchroConfig;
+        this.roleRepository = roleRepository;
     }
 
     public boolean loginCheck(String username) {
@@ -32,6 +39,14 @@ public class ValidationUtil {
         if (!usernameExists(username)) return false;
         if (!validateUsername(username)) return false;
         return !userRepository.findByUsername(username).get().getEnabled();
+    }
+
+    public boolean editCheck(EditUserDto editUserDto) {
+        if (editUserDto.getUsername().equals(synchroConfig.getAdminUsername())) return false;
+        if (roleRepository.findRoleEntityByName(editUserDto.getRole()).isEmpty()) return false;
+        if (editUserDto.getEmail().length() > 60 || editUserDto.getPhone().length() > 12) return false;
+        if (!validateUsername(editUserDto.getUsername())) return false;
+        return userRepository.findByUsername(editUserDto.getUsername()).isEmpty() || userRepository.findByUsername(editUserDto.getUsername()).get().getId().toString().equals(editUserDto.getId());
     }
 
     public boolean validateUserNew(String username) {
@@ -52,6 +67,7 @@ public class ValidationUtil {
                 return false;
         return !(Timestamp.valueOf(editEventDto.getEnd()).before(Timestamp.valueOf(editEventDto.getStart())));
     }
+
     private boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
