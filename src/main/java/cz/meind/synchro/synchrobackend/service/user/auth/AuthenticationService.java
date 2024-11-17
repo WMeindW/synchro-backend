@@ -74,6 +74,7 @@ public class AuthenticationService {
 
     public Optional<LoginResponse> createUser(CreateUserDto createUserDto) {
         if (!validationUtil.validateUserNew(createUserDto.getUsername())) return Optional.empty();
+        if (!validationUtil.validateEmail(createUserDto.getEmail()) || !validationUtil.validatePhone(createUserDto.getPhone())) return Optional.empty();
         if (roleRepository.findRoleEntityByName(createUserDto.getRole()).isEmpty()) return Optional.empty();
         UserEntity user = new UserEntity(roleRepository.findRoleEntityByName(createUserDto.getRole()).get(), createUserDto.getEmail(), createUserDto.getPhone(), false, createUserDto.getUsername(), validationUtil.hashPassword(createUserDto.getPassword()));
         userRepository.save(user);

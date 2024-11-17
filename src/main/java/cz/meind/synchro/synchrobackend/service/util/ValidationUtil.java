@@ -9,6 +9,8 @@ import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditUserDto;
 import lombok.SneakyThrows;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -65,6 +67,25 @@ public class ValidationUtil {
             if (!event.isDeleted() && !Objects.equals(event.getId(), editEventDto.getId()) && !(event.getTimeEnd().before(Timestamp.valueOf(editEventDto.getStart())) || Timestamp.valueOf(editEventDto.getEnd()).before(event.getTimeStart())))
                 return false;
         return !(Timestamp.valueOf(editEventDto.getEnd()).before(Timestamp.valueOf(editEventDto.getStart())));
+    }
+
+    public boolean validateEmail(String email) {
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    public String validateMotd(String motd) {
+        Safelist safelist = Safelist.none()
+                .addTags("img", "div", "h1", "h2", "h3", "h4", "h5", "h6", "p", "b", "i", "a")
+                .addAttributes("img", "src", "alt", "width", "height")
+                .addAttributes("a", "href")
+                .addProtocols("img", "src", "http", "https")
+                .addProtocols("a", "href", "http", "https");
+
+        return Jsoup.clean(motd, safelist);
+    }
+
+    public boolean validatePhone(String phone) {
+        return phone.matches("^\\+?[1-9]\\d{1,14}$");
     }
 
     private boolean usernameExists(String username) {

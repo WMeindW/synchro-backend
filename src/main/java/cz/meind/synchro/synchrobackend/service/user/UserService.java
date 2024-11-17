@@ -61,6 +61,8 @@ public class UserService {
         Optional<UserEntity> u = userRepository.findById(editUserDto.getId());
         if (u.isEmpty()) return false;
         if (u.get().getUsername().equals(synchroConfig.getAdminUsername())) return false;
+        if (!validationUtil.validateEmail(editUserDto.getEmail()) || !validationUtil.validatePhone(editUserDto.getPhone()))
+            return false;
         if (!validationUtil.editCheck(editUserDto)) return false;
         updateUser(editUserDto);
         return true;
