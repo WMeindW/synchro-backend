@@ -5,6 +5,7 @@ import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
 import cz.meind.synchro.synchrobackend.service.user.AttendanceService;
+import cz.meind.synchro.synchrobackend.service.user.InformationService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.events.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,12 +23,14 @@ public class SecureController extends Controller {
     private final SynchroConfig config;
     private final ScheduleService scheduleService;
     private final AttendanceService attendanceService;
+    private final InformationService informationService;
 
-    public SecureController(SecurityService securityService, SynchroConfig config, ScheduleService scheduleService, AttendanceService attendanceService) {
+    public SecureController(SecurityService securityService, SynchroConfig config, ScheduleService scheduleService, AttendanceService attendanceService, InformationService informationService) {
         super(securityService);
         this.config = config;
         this.scheduleService = scheduleService;
         this.attendanceService = attendanceService;
+        this.informationService = informationService;
     }
 
     @GetMapping(value = "/index.html", produces = "text/html")
@@ -69,7 +72,7 @@ public class SecureController extends Controller {
     @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(scheduleService.queryEvents());
     }
 
@@ -88,6 +91,14 @@ public class SecureController extends Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!attendanceService.checkUser(request, username)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/query-motd", produces = "text/html")
+    public ResponseEntity<?> queryMotd(HttpServletRequest request) {
+        //if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+        //  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(informationService.queryMotd());
     }
 
 }

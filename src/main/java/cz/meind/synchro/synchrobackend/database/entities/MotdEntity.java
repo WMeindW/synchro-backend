@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @Cacheable
@@ -17,4 +20,11 @@ public class MotdEntity {
     private Long id;
 
     private String content;
+
+    private Timestamp date;
+
+    public MotdEntity(String content) {
+        this.content = content;
+        this.date = Timestamp.valueOf(LocalDateTime.now());
+    }
 }

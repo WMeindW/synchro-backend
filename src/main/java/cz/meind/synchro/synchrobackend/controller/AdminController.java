@@ -8,6 +8,7 @@ import cz.meind.synchro.synchrobackend.dto.request.DeleteUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditUserDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
+import cz.meind.synchro.synchrobackend.service.user.InformationService;
 import cz.meind.synchro.synchrobackend.service.user.UserService;
 import cz.meind.synchro.synchrobackend.service.user.auth.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
@@ -29,12 +30,14 @@ public class AdminController extends Controller {
 
     private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final InformationService informationService;
 
-    public AdminController(SecurityService securityService, AuthenticationService authenticationService, SynchroConfig config, UserService userService) {
+    public AdminController(SecurityService securityService, AuthenticationService authenticationService, SynchroConfig config, UserService userService, InformationService informationService) {
         super(securityService);
         this.authenticationService = authenticationService;
         this.config = config;
         this.userService = userService;
+        this.informationService = informationService;
     }
 
     @GetMapping(value = "/index.html", produces = "text/html")
@@ -76,6 +79,14 @@ public class AdminController extends Controller {
         //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (userService.editUser(request, editUserDto)) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/save-motd", produces = "application/json")
+    public ResponseEntity<?> saveMotd(@RequestBody String motd, HttpServletRequest request) {
+        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        informationService.saveMotd(motd);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
