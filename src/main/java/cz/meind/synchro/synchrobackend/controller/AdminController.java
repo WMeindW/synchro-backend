@@ -6,6 +6,7 @@ import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.DeleteUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditUserDto;
+import cz.meind.synchro.synchrobackend.dto.request.MotdDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
 import cz.meind.synchro.synchrobackend.service.user.InformationService;
@@ -83,9 +84,9 @@ public class AdminController extends Controller {
 
     @CrossOrigin
     @PostMapping(value = "/save-motd", produces = "application/json")
-    public ResponseEntity<?> saveMotd(@RequestBody String motd, HttpServletRequest request) {
+    public ResponseEntity<?> saveMotd(@RequestBody MotdDto motdDto, HttpServletRequest request) {
         //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        informationService.saveMotd(motd);
+        informationService.saveMotd(motdDto.getMotd());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

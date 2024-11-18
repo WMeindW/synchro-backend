@@ -3,6 +3,7 @@ package cz.meind.synchro.synchrobackend.service.user;
 import cz.meind.synchro.synchrobackend.database.entities.MotdEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.MotdRepository;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,20 @@ public class InformationService {
         this.validationUtil = validationUtil;
     }
 
+    @PostConstruct
+    public void init() {
+
+    }
+
     public String queryMotd() {
-        if (motdRepository.findMaxIdEntity() != null) return motdRepository.findMaxIdEntity().getContent();
+        if (motdRepository.findMaxIdEntity().isPresent()) return motdRepository.findMaxIdEntity().get().getContent();
         return "";
     }
 
     @Async
     public void saveMotd(String motd) {
+        motd = validationUtil.validateMotd(motd);
+        if (motd.isEmpty()) return;
         motdRepository.save(new MotdEntity(validationUtil.validateMotd(motd)));
     }
 }

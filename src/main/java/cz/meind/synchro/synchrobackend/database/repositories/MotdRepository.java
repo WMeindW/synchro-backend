@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MotdRepository extends JpaRepository<MotdEntity, Long> {
 
     @Query("SELECT e FROM MotdEntity e WHERE e.id = (SELECT MAX(id) FROM MotdEntity )")
-    MotdEntity findMaxIdEntity();
+    Optional<MotdEntity> findMaxIdEntity();
 
 }

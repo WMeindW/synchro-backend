@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "motd")
 public class MotdEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String content;
@@ -26,5 +27,9 @@ public class MotdEntity {
     public MotdEntity(String content) {
         this.content = content;
         this.date = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public MotdEntity() {
+
     }
 }
