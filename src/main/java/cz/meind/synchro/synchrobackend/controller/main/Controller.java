@@ -55,9 +55,9 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
-    protected Cookie setCookie(String name,String value, long expiration) {
+    protected Cookie setCookie(String name,String value, long expiration, boolean httpOnly) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(httpOnly);
         cookie.setMaxAge((int) expiration);
         cookie.setPath("/");
         return cookie;

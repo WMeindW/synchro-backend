@@ -46,7 +46,6 @@ public class AdminController extends Controller {
         return super.handleRequestsSecureRedirect(request, response, config.getAdminRole());
     }
 
-    @CrossOrigin
     @PostMapping(value = "/create-user", produces = "application/json")
     public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto, HttpServletRequest request) {
         if (!super.handleApiSecureRequest(request, config.getAdminRole()))
@@ -56,36 +55,36 @@ public class AdminController extends Controller {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
     @PostMapping(value = "/delete-user", produces = "application/json")
     public ResponseEntity<?> deleteUser(@RequestBody DeleteUserDto deleteUserDto, HttpServletRequest request) {
-        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if (userService.deleteUser(request, deleteUserDto)) return new ResponseEntity<>(HttpStatus.OK);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (userService.deleteUser(deleteUserDto)) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
-    @CrossOrigin
     @GetMapping(value = "/query-user", produces = "application/json")
     public ResponseEntity<?> queryUser(HttpServletRequest request) {
-        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        Optional<UserListResponse> responses = userService.queryUserList(request);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Optional<UserListResponse> responses = userService.queryUserList();
         if (responses.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(responses.get());
     }
 
-    @CrossOrigin
     @PostMapping(value = "/edit-user", produces = "application/json")
     public ResponseEntity<?> editUser(@RequestBody EditUserDto editUserDto, HttpServletRequest request) {
-        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if (userService.editUser(request, editUserDto)) return new ResponseEntity<>(HttpStatus.OK);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (userService.editUser(editUserDto)) return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
     @PostMapping(value = "/save-motd", produces = "application/json")
     public ResponseEntity<?> saveMotd(@RequestBody MotdDto motdDto, HttpServletRequest request) {
-        //if (!super.handleApiSecureRequest(request, config.getAdminRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         informationService.saveMotd(motdDto.getMotd());
         return new ResponseEntity<>(HttpStatus.OK);
     }

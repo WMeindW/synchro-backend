@@ -42,13 +42,11 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public Optional<UserListResponse> queryUserList(HttpServletRequest request) {
-        // if (!hasPermissions(request)) return Optional.empty();
+    public Optional<UserListResponse> queryUserList() {
         return Optional.of(new UserListResponse(userRepository.findAll().stream().map(user -> new UserResponseEntity(user.getId().toString(), user.getUsername(), user.getRole().toString(), user.getEmail(), user.getPhone(), user.getEnabled().toString())).toList()));
     }
 
-    public boolean deleteUser(HttpServletRequest request, DeleteUserDto deleteUserDto) {
-        //if (!hasPermissions(request)) return false;
+    public boolean deleteUser(DeleteUserDto deleteUserDto) {
         if (deleteUserDto.getUsername().equals(synchroConfig.getAdminUsername())) return false;
         Optional<UserEntity> u = userRepository.findByUsername(deleteUserDto.getUsername());
         if (u.isEmpty() || !u.get().getId().toString().equals(deleteUserDto.getId())) return false;
@@ -56,8 +54,7 @@ public class UserService {
         return true;
     }
 
-    public boolean editUser(HttpServletRequest request, EditUserDto editUserDto) {
-        //if (!hasPermissions(request)) return false;
+    public boolean editUser( EditUserDto editUserDto) {
         Optional<UserEntity> u = userRepository.findById(editUserDto.getId());
         if (u.isEmpty()) return false;
         if (u.get().getUsername().equals(synchroConfig.getAdminUsername())) return false;
@@ -87,11 +84,5 @@ public class UserService {
         eventRepository.deleteAll(u.getEvents());
         checkRepository.deleteAll(u.getChecks());
         userRepository.delete(u);
-    }
-
-    private boolean hasPermissions(HttpServletRequest request) {
-        Claims c = jwtUtil.extractClaims(securityService.extractCookie(request));
-        if (c == null) return false;
-        return c.get("role").toString().equals(synchroConfig.getAdminRole());
     }
 }
