@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -88,6 +87,5 @@ public class AdminController extends Controller {
         informationService.saveMotd(motdDto.getMotd());
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }
 
