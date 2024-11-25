@@ -87,10 +87,11 @@ public class SecureController extends Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping(value = "/query-motd", produces = "text/html")
     public ResponseEntity<?> queryMotd(HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(informationService.queryMotd());
     }
 
