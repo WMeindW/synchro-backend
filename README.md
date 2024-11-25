@@ -31,7 +31,6 @@
     - Testing
 
 ## Frontend
-    - MOTD
     - Monthly statistics / hours worked
     - Styling pages
     - Polishing
