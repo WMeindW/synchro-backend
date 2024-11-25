@@ -2,6 +2,7 @@ package cz.meind.synchro.synchrobackend.service.user;
 
 import cz.meind.synchro.synchrobackend.database.entities.MotdEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.MotdRepository;
+import cz.meind.synchro.synchrobackend.dto.request.MotdDto;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Async;
@@ -24,6 +25,11 @@ public class InformationService {
 
     public String queryMotd() {
         if (motdRepository.findMaxIdEntity().isPresent()) return motdRepository.findMaxIdEntity().get().getContent();
+        return "";
+    }
+
+    public String testMotd(MotdDto motdDto) {
+        if (motdRepository.findMaxIdEntity().isPresent()) return validationUtil.validateMotd(motdDto.getMotd());
         return "";
     }
 
