@@ -28,8 +28,8 @@ public class InformationService {
         return "";
     }
 
-    public String testMotd(MotdDto motdDto) {
-        if (motdRepository.findMaxIdEntity().isPresent()) return validationUtil.validateMotd(motdDto.getMotd());
+    public String testMotd(String motd) {
+        if (motdRepository.findMaxIdEntity().isPresent()) return validationUtil.validateMotd(motd);
         return "";
     }
 

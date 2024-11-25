@@ -89,11 +89,11 @@ public class AdminController extends Controller {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/test-motd", produces = "application/json")
+    @PostMapping(value = "/test-motd", produces = "text/html")
     public ResponseEntity<?> testMotd(@RequestBody MotdDto motdDto, HttpServletRequest request) {
        // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
             //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(informationService.testMotd(motdDto));
+        return ResponseEntity.ok(informationService.testMotd(motdDto.getMotd()));
     }
 }
 
