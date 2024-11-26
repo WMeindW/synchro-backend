@@ -51,7 +51,7 @@ public class AttendanceService {
     }
 
     public EventsResponse queryAttendance() {
-        return new EventsResponse(checkRepository.findAll().stream().map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getCheckIn().toLocalDateTime(), eventEntity.getCheckOut().toLocalDateTime(), eventEntity.getUser().getUsername(), synchroConfig.getWorkPeriod())).toList());
+        return new EventsResponse(checkRepository.findAll().stream().filter(checkEntity -> checkEntity.getCheckOut() != null).map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getCheckIn().toLocalDateTime(), eventEntity.getCheckOut().toLocalDateTime(), eventEntity.getUser().getUsername(), synchroConfig.getWorkPeriod())).toList());
     }
 
     @Async

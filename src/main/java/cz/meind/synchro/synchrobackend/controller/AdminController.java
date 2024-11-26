@@ -101,7 +101,7 @@ public class AdminController extends Controller {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/query-attendance", produces = "text/html")
+    @GetMapping(value = "/query-attendance", produces = "application/json")
     public ResponseEntity<?> queryAttendance(HttpServletRequest request) {
         // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
         //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
