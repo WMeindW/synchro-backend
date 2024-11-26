@@ -9,6 +9,7 @@ import cz.meind.synchro.synchrobackend.dto.request.EditUserDto;
 import cz.meind.synchro.synchrobackend.dto.request.MotdDto;
 import cz.meind.synchro.synchrobackend.dto.response.LoginResponse;
 import cz.meind.synchro.synchrobackend.dto.response.UserListResponse;
+import cz.meind.synchro.synchrobackend.service.user.AttendanceService;
 import cz.meind.synchro.synchrobackend.service.user.InformationService;
 import cz.meind.synchro.synchrobackend.service.user.UserService;
 import cz.meind.synchro.synchrobackend.service.user.auth.AuthenticationService;
@@ -31,13 +32,15 @@ public class AdminController extends Controller {
     private final AuthenticationService authenticationService;
     private final UserService userService;
     private final InformationService informationService;
+    private final AttendanceService attendanceService;
 
-    public AdminController(SecurityService securityService, AuthenticationService authenticationService, SynchroConfig config, UserService userService, InformationService informationService) {
+    public AdminController(SecurityService securityService, AuthenticationService authenticationService, SynchroConfig config, UserService userService, InformationService informationService, AttendanceService attendanceService) {
         super(securityService);
         this.authenticationService = authenticationService;
         this.config = config;
         this.userService = userService;
         this.informationService = informationService;
+        this.attendanceService = attendanceService;
     }
 
     @GetMapping(value = "/index.html", produces = "text/html")
@@ -95,6 +98,14 @@ public class AdminController extends Controller {
        // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
             //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(informationService.testMotd(motdDto.getMotd()));
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/query-attendance", produces = "text/html")
+    public ResponseEntity<?> queryAttendance(HttpServletRequest request) {
+        // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(attendanceService.queryAttendance());
     }
 }
 

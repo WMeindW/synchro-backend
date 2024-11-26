@@ -49,6 +49,9 @@ public class SynchroConfig {
     @Value("${security.jwt.secret-key:cc53da86b2af8ec3e83e2cf79224687741cdc3470ed2290b87ca43cb9cef143b}")
     private String secretKey;
 
+    @Value("${attendance.synchro.type:WORK}")
+    private String workPeriod;
+
     @Value("#{'${events.synchro.types:SHIFT,VACATION,HOMEOFFICE-SHIFT,SICK-LEAVE}'.split(',')}")
     private List<String> eventTypeList;
 
@@ -69,6 +72,7 @@ public class SynchroConfig {
         logger.info("signupLinkExpires: {}", signupLinkExpires);
         logger.info("secretKey: {}", secretKey);
         logger.info("eventTypeList: {}", eventTypeList);
+        logger.info("workPeriod: {}", workPeriod);
         logger.info("Configuration loaded successfully.");
     }
 

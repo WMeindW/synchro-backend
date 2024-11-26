@@ -4,6 +4,8 @@ import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.database.entities.CheckEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.CheckRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
+import cz.meind.synchro.synchrobackend.dto.response.EventResponseEntity;
+import cz.meind.synchro.synchrobackend.dto.response.EventsResponse;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AttendanceService {
@@ -45,6 +48,10 @@ public class AttendanceService {
         updatedCheckedUser(username);
         updatedCheckEntity(username);
         return true;
+    }
+
+    public EventsResponse queryAttendance() {
+        return new EventsResponse(checkRepository.findAll().stream().map(eventEntity -> new EventResponseEntity(eventEntity.getId(), eventEntity.getCheckIn().toLocalDateTime(), eventEntity.getCheckOut().toLocalDateTime(), eventEntity.getUser().getUsername(), synchroConfig.getWorkPeriod())).toList());
     }
 
     @Async
