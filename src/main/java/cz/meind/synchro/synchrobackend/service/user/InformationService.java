@@ -1,26 +1,41 @@
 package cz.meind.synchro.synchrobackend.service.user;
 
+import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.database.entities.MotdEntity;
+import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.MotdRepository;
-import cz.meind.synchro.synchrobackend.dto.request.MotdDto;
+import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
+import cz.meind.synchro.synchrobackend.dto.response.InfoResponse;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InformationService {
     private final MotdRepository motdRepository;
     private final ValidationUtil validationUtil;
+    private final UserRepository userRepository;
+    private final SynchroConfig synchroConfig;
 
-    public InformationService(MotdRepository motdRepository, ValidationUtil validationUtil) {
+    public InformationService(MotdRepository motdRepository, ValidationUtil validationUtil, UserRepository userRepository, SynchroConfig synchroConfig) {
         this.motdRepository = motdRepository;
         this.validationUtil = validationUtil;
+        this.userRepository = userRepository;
+        this.synchroConfig = synchroConfig;
     }
 
     @PostConstruct
     public void init() {
 
+    }
+
+    public InfoResponse queryInfo(){
+        List<String> users = userRepository.findAll().stream().filter(UserEntity::getEnabled).map(UserEntity::getUsername).toList();
+        System.out.println(synchroConfig.getEventTypeList());
+        return new InfoResponse(users, synchroConfig.getEventTypeList());
     }
 
     public String queryMotd() {

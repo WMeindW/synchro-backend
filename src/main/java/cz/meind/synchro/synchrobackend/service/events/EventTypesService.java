@@ -6,6 +6,7 @@ import cz.meind.synchro.synchrobackend.database.repositories.EventTypeRepository
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class EventTypesService {
     }
 
     private List<String> checkMissing() {
-        List<String> missing = synchroConfig.getEventTypeList();
+        List<String> missing = new ArrayList<>(synchroConfig.getEventTypeList());
         missing.removeIf(e -> eventTypeRepository.findAll().stream().map(EventTypeEntity::getName).toList().contains(e));
         return missing;
     }
