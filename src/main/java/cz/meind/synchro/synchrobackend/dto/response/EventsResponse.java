@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class EventsResponse {
-    private List<EventResponseEntity> events;
+    private final List<EventResponseEntity> events;
 
     public EventsResponse(List<EventResponseEntity> events) {
         this.events = events;

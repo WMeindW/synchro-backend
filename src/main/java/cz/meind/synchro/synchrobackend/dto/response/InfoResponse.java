@@ -11,9 +11,11 @@ import java.util.List;
 public class InfoResponse {
     private final List<String> users;
     private final List<String> shiftTypes;
+    private final List<String> userTypes;
 
-    public InfoResponse(List<String> users, List<String> shiftTypes) {
+    public InfoResponse(List<String> users, List<String> shiftTypes, List<String> userTypes) {
         this.users = users;
         this.shiftTypes = shiftTypes;
+        this.userTypes = userTypes;
     }
 }
