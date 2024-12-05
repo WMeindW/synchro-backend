@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -107,6 +108,14 @@ public class AdminController extends Controller {
         // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
         //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(attendanceService.queryAttendance());
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/query-summary", produces = "application/json")
+    public ResponseEntity<?> querySummary(@RequestParam LocalDate month, HttpServletRequest request) {
+        // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(month.toString());
     }
 }
 

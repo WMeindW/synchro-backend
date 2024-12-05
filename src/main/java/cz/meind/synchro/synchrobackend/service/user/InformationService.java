@@ -8,11 +8,13 @@ import cz.meind.synchro.synchrobackend.database.repositories.MotdRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.RoleRepository;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.response.InfoResponse;
+import cz.meind.synchro.synchrobackend.dto.response.SummaryResponse;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,9 +33,8 @@ public class InformationService {
         this.roleRepository = roleRepository;
     }
 
-    @PostConstruct
-    public void init() {
-
+    public SummaryResponse querySummary(LocalDate month){
+        
     }
 
     public InfoResponse queryInfo(){
