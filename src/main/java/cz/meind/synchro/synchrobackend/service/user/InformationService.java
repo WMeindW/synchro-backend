@@ -10,7 +10,6 @@ import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.dto.response.InfoResponse;
 import cz.meind.synchro.synchrobackend.dto.response.SummaryResponse;
 import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
-import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
