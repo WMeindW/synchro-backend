@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public interface CheckRepository extends JpaRepository<CheckEntity, Long> {
@@ -19,4 +20,5 @@ public interface CheckRepository extends JpaRepository<CheckEntity, Long> {
     void updateChecked(@Param("user") UserEntity user, @Param("checkOut") Timestamp checkOut);
 
 
+    List<CheckEntity> findAllByUser(UserEntity user);
 }

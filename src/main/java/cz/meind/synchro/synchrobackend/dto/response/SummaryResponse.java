@@ -8,9 +8,9 @@ import java.util.List;
 @Getter
 @Setter
 public class SummaryResponse {
-    private List<UserValueResponseEntity> usernames;
+    private List<UserValueResponseEntity> values;
 
-    public SummaryResponse(List<UserValueResponseEntity> usernames) {
-        this.usernames = usernames;
+    public SummaryResponse(List<UserValueResponseEntity> values) {
+        this.values = values;
     }
 }

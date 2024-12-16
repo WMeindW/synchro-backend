@@ -26,5 +26,7 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
     @Query("UPDATE EventEntity e SET e.timeEnd = :timeEnd, e.timeStart = :timeStart, e.type = :type, e.user = :user WHERE e.id = :id")
     void updateEventEntityById(@Param("user") UserEntity user, @Param("timeEnd") Timestamp timeEnd, @Param("timeStart") Timestamp timeStart, @Param("type") EventTypeEntity type, @Param("id") Long id);
 
+    List<EventEntity> findAllByTypeAndUser(EventTypeEntity type, UserEntity user);
+
     List<EventEntity> findAllByUser(UserEntity user);
 }
