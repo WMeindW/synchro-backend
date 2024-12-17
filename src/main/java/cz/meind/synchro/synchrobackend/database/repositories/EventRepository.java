@@ -16,6 +16,9 @@ import java.util.List;
 @Repository
 public interface EventRepository extends JpaRepository<EventEntity, Long> {
 
+    @Query("SELECT e FROM EventEntity e WHERE MONTH(e.timeStart) = :month AND YEAR(e.timeStart) = :year AND e.user.enabled = true AND e.type.name = 'SHIFT'")
+    List<EventEntity> findAllByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
     @Transactional
     @Modifying
     @Query("UPDATE EventEntity e SET e.deleted = :deleted WHERE e.id = :id")
@@ -25,8 +28,6 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
     @Modifying
     @Query("UPDATE EventEntity e SET e.timeEnd = :timeEnd, e.timeStart = :timeStart, e.type = :type, e.user = :user WHERE e.id = :id")
     void updateEventEntityById(@Param("user") UserEntity user, @Param("timeEnd") Timestamp timeEnd, @Param("timeStart") Timestamp timeStart, @Param("type") EventTypeEntity type, @Param("id") Long id);
-
-    List<EventEntity> findAllByTypeAndUser(EventTypeEntity type, UserEntity user);
 
     List<EventEntity> findAllByUser(UserEntity user);
 }

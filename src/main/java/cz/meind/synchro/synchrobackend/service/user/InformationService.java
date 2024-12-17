@@ -23,7 +23,6 @@ public class InformationService {
     private final SynchroConfig synchroConfig;
     private final RoleRepository roleRepository;
     private final EventRepository eventRepository;
-    private final EventTypeRepository eventTypeRepository;
     private final CheckRepository checkRepository;
 
     public InformationService(MotdRepository motdRepository, ValidationUtil validationUtil, UserRepository userRepository, SynchroConfig synchroConfig, RoleRepository roleRepository, EventRepository eventRepository, EventTypeRepository eventTypeRepository, CheckRepository checkRepository) {
@@ -33,13 +32,19 @@ public class InformationService {
         this.synchroConfig = synchroConfig;
         this.roleRepository = roleRepository;
         this.eventRepository = eventRepository;
-        this.eventTypeRepository = eventTypeRepository;
         this.checkRepository = checkRepository;
     }
 
     public SummaryResponse querySummary(LocalDate month) {
         List<UserValueResponseEntity> responseObjects = new ArrayList<>();
-        System.out.println(checkRepository.findAllByMonthAndYear(month.getMonthValue(),month.getYear()));
+        List<EventEntity> events = eventRepository.findAllByMonthAndYear(month.getMonthValue(), month.getYear());
+        List<CheckEntity> checkEntities = checkRepository.findAllByMonthAndYear(month.getMonthValue(), month.getYear());
+        List<UserEntity> users = userRepository.findUserEntitiesByEnabled(true);
+        for (UserEntity user : users) {
+            float calculated = events.stream().filter(e -> e.getUser().equals(user)).map(e -> Duration.between(e.getTimeStart().toLocalDateTime(), e.getTimeEnd().toLocalDateTime()).toMinutes()).mapToLong(Long::longValue).sum();
+            float checked = checkEntities.stream().filter(c -> c.getUser().equals(user)).map(c -> Duration.between(c.getCheckIn().toLocalDateTime(), c.getCheckOut().toLocalDateTime()).toMinutes()).mapToLong(Long::longValue).sum();
+            responseObjects.add(new UserValueResponseEntity(user.getUsername(), Float.toString(calculated / 60), Float.toString(checked / 60)));
+        }
         return new SummaryResponse(responseObjects);
     }
 
