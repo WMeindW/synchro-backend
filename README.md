@@ -26,12 +26,11 @@
 
 # TODO:
 ## Backend
-    - Monthly statistics / hours worked
     - Polishing
     - Testing
 
 ## Frontend
-    - Monthly statistics / hours worked
+    - Implement monthly statistics / hours worked
     - Styling pages
     - Polishing
     - Testing
