@@ -67,11 +67,10 @@ public class AdminController extends Controller {
     }
 
 
-    @CrossOrigin
     @GetMapping(value = "/query-user", produces = "application/json")
     public ResponseEntity<?> queryUser(HttpServletRequest request) {
-        //if (!super.handleApiSecureRequest(request, config.getAdminRole()))
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<UserListResponse> responses = userService.queryUserList();
         if (responses.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(responses.get());
@@ -85,36 +84,32 @@ public class AdminController extends Controller {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
     @PostMapping(value = "/save-motd", produces = "application/json")
     public ResponseEntity<?> saveMotd(@RequestBody MotdDto motdDto, HttpServletRequest request) {
-        //if (!super.handleApiSecureRequest(request, config.getAdminRole()))
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         informationService.saveMotd(motdDto.getMotd());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @CrossOrigin
     @PostMapping(value = "/test-motd", produces = "text/html")
     public ResponseEntity<?> testMotd(@RequestBody MotdDto motdDto, HttpServletRequest request) {
-       // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(informationService.testMotd(motdDto.getMotd()));
     }
 
-    @CrossOrigin
     @GetMapping(value = "/query-attendance", produces = "application/json")
     public ResponseEntity<?> queryAttendance(HttpServletRequest request) {
-        // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
-        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(attendanceService.queryAttendance());
     }
 
-    @CrossOrigin
     @GetMapping(value = "/query-summary", produces = "application/json")
     public ResponseEntity<?> querySummary(@RequestParam LocalDate month, HttpServletRequest request) {
-        // if (!super.handleApiSecureRequest(request, config.getAdminRole()))
-        //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(informationService.querySummary(month));
     }
 }
