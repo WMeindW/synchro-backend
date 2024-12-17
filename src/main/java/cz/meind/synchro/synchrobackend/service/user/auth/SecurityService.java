@@ -32,7 +32,13 @@ public class SecurityService {
         } catch (Exception e) {
             return false;
         }
+    }
 
+    public boolean signupAttributeAccessFilter(String role, String token) {
+        Optional<UserEntity> u = userRepository.findByUsername(jwtUtil.extractClaims(token).getSubject());
+        if (u.isEmpty() || u.get().getEnabled()) return false;
+        if (!role.contains(jwtUtil.extractClaims(token).get("role").toString())) return false;
+        return jwtUtil.isTokenValid(token);
     }
 
     public String extractCookie(HttpServletRequest request) {

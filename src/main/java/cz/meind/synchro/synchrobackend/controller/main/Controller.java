@@ -49,8 +49,10 @@ public class Controller {
     protected ResponseEntity<?> permitSignUp(HttpServletRequest request, HttpServletResponse response, String token) {
         if (this.accessFilterRedirectDashboard(request, response, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.FOUND);
-        if (securityService.attributeAccessFilter(config.getCombinedRole(), token))
+        if (securityService.signupAttributeAccessFilter(config.getCombinedRole(), token)){
             return ResponseEntity.ok(router.getFile(request));
+        }
+        System.out.println("Redirecting");
         router.redirect(response, config.getLoginPage());
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
