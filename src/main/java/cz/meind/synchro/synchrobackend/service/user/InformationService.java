@@ -10,6 +10,7 @@ import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +39,7 @@ public class InformationService {
 
     public SummaryResponse querySummary(LocalDate month) {
         List<UserValueResponseEntity> responseObjects = new ArrayList<>();
-        for (UserEntity user : userRepository.findUserEntitiesByEnabled(true)) {
-            List<EventEntity> shifts = eventRepository.findAllByTypeAndUser(eventTypeRepository.findEventTypeEntityByName("SHIFT").get(),user);
-            List<CheckEntity> checks = checkRepository.findAllByUser(user);
-
-        }
+        System.out.println(checkRepository.findAllByMonthAndYear(month.getMonthValue(),month.getYear()));
         return new SummaryResponse(responseObjects);
     }
 

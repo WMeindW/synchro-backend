@@ -36,5 +36,16 @@ public class CheckEntity {
     public CheckEntity() {
 
     }
+
+    @Override
+    public String toString() {
+        return "CheckEntity{" +
+                "id=" + id +
+                ", checkIn=" + checkIn +
+                ", checkOut=" + checkOut +
+                ", checked=" + checked +
+                ", user=" + user +
+                '}';
+    }
 }
 

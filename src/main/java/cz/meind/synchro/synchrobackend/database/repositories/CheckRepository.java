@@ -19,6 +19,6 @@ public interface CheckRepository extends JpaRepository<CheckEntity, Long> {
     @Query("UPDATE CheckEntity c SET c.checkOut = :checkOut, c.checked = false WHERE c.user = :user and c.checked = true")
     void updateChecked(@Param("user") UserEntity user, @Param("checkOut") Timestamp checkOut);
 
-
-    List<CheckEntity> findAllByUser(UserEntity user);
+    @Query("SELECT e FROM CheckEntity e WHERE MONTH(e.checkIn) = :month AND YEAR(e.checkIn) = :year AND e.user.enabled = true")
+    List<CheckEntity> findAllByMonthAndYear(@Param("month") int month, @Param("year") int year);
 }
