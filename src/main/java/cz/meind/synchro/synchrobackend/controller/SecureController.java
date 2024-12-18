@@ -94,10 +94,11 @@ public class SecureController extends Controller {
         return ResponseEntity.ok(informationService.queryMotd());
     }
 
+    @CrossOrigin
     @GetMapping(value = "/query-info", produces = "application/json")
     public ResponseEntity<?> queryInfo(HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+           // return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(informationService.queryInfo());
     }
 

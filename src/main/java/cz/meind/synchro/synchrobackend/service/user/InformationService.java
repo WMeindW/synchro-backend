@@ -10,6 +10,8 @@ import cz.meind.synchro.synchrobackend.service.util.ValidationUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,10 +42,12 @@ public class InformationService {
         List<EventEntity> events = eventRepository.findAllByMonthAndYear(month.getMonthValue(), month.getYear());
         List<CheckEntity> checkEntities = checkRepository.findAllByMonthAndYear(month.getMonthValue(), month.getYear());
         List<UserEntity> users = userRepository.findUserEntitiesByEnabled(true);
+        DecimalFormat df = new DecimalFormat("0.0");
+        df.setRoundingMode(RoundingMode.DOWN);
         for (UserEntity user : users) {
             float calculated = events.stream().filter(e -> e.getUser().equals(user)).map(e -> Duration.between(e.getTimeStart().toLocalDateTime(), e.getTimeEnd().toLocalDateTime()).toMinutes()).mapToLong(Long::longValue).sum();
             float checked = checkEntities.stream().filter(c -> c.getUser().equals(user)).map(c -> Duration.between(c.getCheckIn().toLocalDateTime(), c.getCheckOut().toLocalDateTime()).toMinutes()).mapToLong(Long::longValue).sum();
-            responseObjects.add(new UserValueResponseEntity(user.getUsername(), Float.toString(calculated / 60), Float.toString(checked / 60)));
+            responseObjects.add(new UserValueResponseEntity(user.getUsername(), df.format(calculated / 60), df.format(checked / 60)));
         }
         return new SummaryResponse(responseObjects);
     }
