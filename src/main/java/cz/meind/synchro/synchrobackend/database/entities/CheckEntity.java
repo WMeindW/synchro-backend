@@ -23,6 +23,7 @@ public class CheckEntity {
     private Timestamp checkOut;
 
     private Boolean checked;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;

@@ -108,8 +108,10 @@ public class AdminController extends Controller {
 
     @GetMapping(value = "/query-summary", produces = "application/json")
     public ResponseEntity<?> querySummary(@RequestParam LocalDate month, HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+        if (!super.handleApiSecureRequest(request, config.getAdminRole())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return ResponseEntity.ok(informationService.querySummary(month));
     }
 }
