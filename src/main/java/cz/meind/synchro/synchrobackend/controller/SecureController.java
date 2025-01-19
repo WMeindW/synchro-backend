@@ -65,14 +65,12 @@ public class SecureController extends Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-   /* @GetMapping(value = "/query-event", produces = "application/json")
+    @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
         if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(scheduleService.queryEvents());
     }
-
-    */
 
     @GetMapping(value = "/query-attendance", produces = "application/json")
     public ResponseEntity<?> queryAttendance(@RequestParam String username, HttpServletRequest request) {
