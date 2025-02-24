@@ -55,18 +55,19 @@ public class AuthController extends Controller {
     public ResponseEntity<?> login(@RequestBody LoginUserDto request, HttpServletResponse response) {
         Optional<LoginResponse> login = authService.login(request);
         if (login.isEmpty()) return ResponseEntity.status(409).body("Error occurred while logging in.");
-        response.addCookie(super.setCookie("token", login.get().getToken(), login.get().getExpiresIn(),true));
-        response.addCookie(super.setCookie("username", login.get().getUsername(), login.get().getExpiresIn(),false));
+        response.addCookie(super.setCookie("token", login.get().getToken(), login.get().getExpiresIn(), true));
+        response.addCookie(super.setCookie("username", login.get().getUsername(), login.get().getExpiresIn(), false));
+        response.addCookie(super.setCookie("role", login.get().getRole(), login.get().getExpiresIn(), false));
         return ResponseEntity.ok(login.get());
-
     }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        if (!super.handleApiSecureRequest(request, synchroConfig.getCombinedRole())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!super.handleApiSecureRequest(request, synchroConfig.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         authService.logout(request);
-        response.addCookie(super.setCookie("token", null, 0,true));
-        response.addCookie(super.setCookie("username", null, 0,false));
+        response.addCookie(super.setCookie("token", null, 0, true));
+        response.addCookie(super.setCookie("username", null, 0, false));
         return ResponseEntity.ok("Logout successful");
     }
 }

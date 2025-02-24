@@ -30,7 +30,6 @@
     - Testing
 
 ## Frontend
-    - Implement monthly statistics / hours worked
     - Styling pages
     - Polishing
     - Testing
