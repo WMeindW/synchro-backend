@@ -74,13 +74,13 @@ public class ValidationUtil {
     }
 
     public String validateMotd(String motd) {
+        //rework this
         Safelist safelist = Safelist.none()
                 .addTags("img", "div", "h1", "h2", "h3", "h4", "h5", "h6", "p", "b", "i", "a")
                 .addAttributes("img", "src", "alt", "width", "height","style")
                 .addAttributes("a", "href")
                 .addProtocols("img", "src", "http", "https")
                 .addProtocols("a", "href", "http", "https");
-
         return Jsoup.clean(motd, safelist);
     }
 
