@@ -26,6 +26,7 @@
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
 }
+
 @keyframes gradientShift {
     0% {
         background-position: 0 50%;
@@ -71,7 +72,7 @@
     font-size: 24px;
 }
 
-.header-signup{
+.header-signup {
     color: #DFD5A5;
     margin-bottom: 20px;
     font-size: 24px;
@@ -119,10 +120,11 @@ button {
     transition: background-color 0.3s ease;
 }
 
-.signup{
+.signup {
     background-color: #DFD5A5 !important;
     color: #053C5E;
 }
+
 .error-message {
     color: #BEDBF7;
 }
@@ -131,13 +133,15 @@ button:hover {
     background-color: #1F7A8C;
     color: #fff;
 }
-.redirect-box{
+
+.redirect-box {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 40px;
     margin-top: 5px;
 }
+
 a {
     color: #BEDBF7;
 }
