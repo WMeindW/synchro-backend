@@ -64,8 +64,7 @@ public class InformationService {
     }
 
     public String testMotd(String motd) {
-        if (motdRepository.findMaxIdEntity().isPresent()) return validationUtil.validateMotd(motd);
-        return "";
+        return validationUtil.validateMotd(motd);
     }
 
     @Async

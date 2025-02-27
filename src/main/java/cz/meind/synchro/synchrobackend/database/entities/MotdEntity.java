@@ -20,6 +20,7 @@ public class MotdEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
     private String content;
 
     private Timestamp date;
