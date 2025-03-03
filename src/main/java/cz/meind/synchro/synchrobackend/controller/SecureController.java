@@ -4,16 +4,15 @@ import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.dto.request.CreateEventDto;
 import cz.meind.synchro.synchrobackend.dto.request.EditEventDto;
+import cz.meind.synchro.synchrobackend.service.events.ScheduleService;
 import cz.meind.synchro.synchrobackend.service.user.AttendanceService;
 import cz.meind.synchro.synchrobackend.service.user.InformationService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
-import cz.meind.synchro.synchrobackend.service.events.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/user")
@@ -65,10 +64,13 @@ public class SecureController extends Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping(value = "/query-event", produces = "application/json")
     public ResponseEntity<?> queryEvent(HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
+        /*if (!super.handleApiSecureRequest(request, config.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+         */
         return ResponseEntity.ok(scheduleService.queryEvents());
     }
 
