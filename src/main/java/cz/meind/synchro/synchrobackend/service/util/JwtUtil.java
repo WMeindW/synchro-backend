@@ -29,7 +29,7 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, Map<String, String> extraClaims, Long expiresIn) {
-        return Jwts.builder().setClaims(extraClaims)  // Set extra claims
+        return Jwts.builder().setClaims(extraClaims)
                 .setSubject(username).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + expiresIn)).signWith(getSigningKey(), SignatureAlgorithm.HS256)  // Use new signWith method
                 .compact();
     }
