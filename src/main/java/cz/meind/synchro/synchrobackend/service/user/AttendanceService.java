@@ -56,6 +56,7 @@ public class AttendanceService {
 
     @Async
     protected void updatedCheckEntity(String username) {
+        //bug o hodinu dříve check in/out
         if (userRepository.findByUsername(username).get().isCheckedIn())
             checkRepository.updateChecked(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now()));
         else
