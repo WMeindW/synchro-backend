@@ -66,11 +66,13 @@ public class AdminController extends Controller {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-
+    @CrossOrigin
     @GetMapping(value = "/query-user", produces = "application/json")
     public ResponseEntity<?> queryUser(HttpServletRequest request) {
-        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+        /*if (!super.handleApiSecureRequest(request, config.getAdminRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+         */
         Optional<UserListResponse> responses = userService.queryUserList();
         if (responses.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(responses.get());
