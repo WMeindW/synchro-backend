@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class AttendanceService {
@@ -44,7 +43,7 @@ public class AttendanceService {
 
     public boolean checkUser(HttpServletRequest request, String username) {
         if (!validationUtil.loginCheck(username)) return false;
-        if (!hasPermissions(request, username)) return false;
+        //if (!hasPermissions(request, username)) return false;
         updatedCheckedUser(username);
         updatedCheckEntity(username);
         return true;
@@ -56,11 +55,10 @@ public class AttendanceService {
 
     @Async
     protected void updatedCheckEntity(String username) {
-        //bug o hodinu dříve check in/out
         if (userRepository.findByUsername(username).get().isCheckedIn())
-            checkRepository.updateChecked(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now()));
+            checkRepository.updateChecked(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
         else
-            checkRepository.save(new CheckEntity(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now())));
+            checkRepository.save(new CheckEntity(userRepository.findByUsername(username).get(), Timestamp.valueOf(LocalDateTime.now().plusHours(1))));
     }
 
     @Async

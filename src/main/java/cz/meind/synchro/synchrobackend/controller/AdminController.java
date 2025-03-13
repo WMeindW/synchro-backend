@@ -15,11 +15,10 @@ import cz.meind.synchro.synchrobackend.service.user.UserService;
 import cz.meind.synchro.synchrobackend.service.user.auth.AuthenticationService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -66,13 +65,10 @@ public class AdminController extends Controller {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
     @GetMapping(value = "/query-user", produces = "application/json")
     public ResponseEntity<?> queryUser(HttpServletRequest request) {
-        /*if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-         */
         Optional<UserListResponse> responses = userService.queryUserList();
         if (responses.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(responses.get());
@@ -108,13 +104,10 @@ public class AdminController extends Controller {
         return ResponseEntity.ok(attendanceService.queryAttendance());
     }
 
-    @CrossOrigin
     @GetMapping(value = "/query-summary", produces = "application/json")
     public ResponseEntity<?> querySummary(@RequestParam LocalDate month, HttpServletRequest request) {
-       /* if (!super.handleApiSecureRequest(request, config.getAdminRole()))
+        if (!super.handleApiSecureRequest(request, config.getAdminRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        */
         return ResponseEntity.ok(informationService.querySummary(month));
     }
 }
