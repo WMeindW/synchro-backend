@@ -3,6 +3,7 @@ package cz.meind.synchro.synchrobackend.service.user.auth;
 import cz.meind.synchro.synchrobackend.database.entities.UserEntity;
 import cz.meind.synchro.synchrobackend.database.repositories.UserRepository;
 import cz.meind.synchro.synchrobackend.service.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class SecurityService {
      * Constructs an instance of SecurityService with the specified dependencies.
      *
      * @param userRepository Repository for accessing user data.
-     * @param jwtUtil Utility for handling JWTs.
+     * @param jwtUtil        Utility for handling JWTs.
      */
     public SecurityService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
@@ -35,7 +36,7 @@ public class SecurityService {
      * This method extracts the token from the request and validates it against the role.
      *
      * @param request The HTTP request containing the JWT token.
-     * @param role The required role for accessing the resource.
+     * @param role    The required role for accessing the resource.
      * @return true if the token is present and valid for the specified role, false otherwise.
      */
     public boolean accessFilter(HttpServletRequest request, String role) {
@@ -46,7 +47,7 @@ public class SecurityService {
     /**
      * Validates the token and checks if the user associated with the token has the required role.
      *
-     * @param role The required role for accessing the resource.
+     * @param role  The required role for accessing the resource.
      * @param token The JWT token to be validated.
      * @return true if the token is valid and the user has the required role, false otherwise.
      */
@@ -62,14 +63,16 @@ public class SecurityService {
      * Filters access during the signup process, ensuring the user has a valid, unexpired token and the correct role.
      * This method also checks if the user account is enabled and if the role is contained in the token.
      *
-     * @param role The required role for accessing the signup process.
+     * @param role  The required role for accessing the signup process.
      * @param token The JWT token to be validated.
      * @return true if the token is valid for the specified role and the user account is not enabled, false otherwise.
      */
     public boolean signupAttributeAccessFilter(String role, String token) {
-        Optional<UserEntity> u = userRepository.findByUsername(jwtUtil.extractClaims(token).getSubject());
+        Claims claims = jwtUtil.extractClaims(token);
+        if (claims == null) return false;
+        Optional<UserEntity> u = userRepository.findByUsername(claims.getSubject());
         if (u.isEmpty() || u.get().getEnabled()) return false;
-        if (!role.contains(jwtUtil.extractClaims(token).get("role").toString())) return false;
+        if (!role.contains(claims.get("role").toString())) return false;
         return jwtUtil.isTokenValid(token);
     }
 
@@ -91,7 +94,7 @@ public class SecurityService {
      * It also checks if the user is enabled and if the token is valid.
      *
      * @param token The JWT token to be validated.
-     * @param role The required role for accessing the resource.
+     * @param role  The required role for accessing the resource.
      * @return true if the token is valid, the user is enabled, and the user has the required role, false otherwise.
      */
     private boolean validateToken(String token, String role) {

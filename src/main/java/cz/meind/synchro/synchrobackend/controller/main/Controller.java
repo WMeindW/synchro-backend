@@ -101,7 +101,6 @@ public class Controller {
         if (securityService.signupAttributeAccessFilter(config.getCombinedRole(), token)){
             return ResponseEntity.ok(router.getFile(request));
         }
-        System.out.println("Redirecting");
         router.redirect(response, config.getLoginPage());
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
