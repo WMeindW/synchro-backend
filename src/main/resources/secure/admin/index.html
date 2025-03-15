@@ -1,62 +1,13 @@
-<!DOCTYPE html>
-<html lang="cs">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>UserIndex</title>
+    <script type="module" crossorigin src="/admin.js"></script>
+    <link rel="stylesheet" crossorigin href="/index-mt_3KUMK.css">
 </head>
 <body>
-<h2>Create User</h2>
-<form id="createUserForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required><br><br>
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br><br>
-
-    <label for="role">Role:</label>
-    <input type="text" id="role" name="role" required><br><br>
-
-    <label>
-        <textarea id="link"></textarea>
-    </label>
-
-    <button type="submit">Create User</button>
-</form>
-
-<script>
-    document.getElementById('createUserForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Zabráníme odeslání formuláře
-
-        // Získání hodnot z formuláře
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const role = document.getElementById('role').value;
-
-        // Vytvoření objektu CreateUserDto
-        const createUserDto = {
-            username: username,
-            password: password,
-            role: role
-        };
-
-        // Odeslání JSON requestu pomocí fetch
-        fetch('/admin/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(createUserDto)
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('link').value = data["token"];
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Error creating user.');
-            });
-    });
-</script>
+<div id="root"></div>
 </body>
 </html>
