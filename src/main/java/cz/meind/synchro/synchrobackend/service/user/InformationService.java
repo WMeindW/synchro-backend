@@ -27,6 +27,17 @@ public class InformationService {
     private final EventRepository eventRepository;
     private final CheckRepository checkRepository;
 
+    /**
+     * Constructor for InformationService.
+     *
+     * @param motdRepository  Repository to handle Messages of the Day (MOTD).
+     * @param validationUtil  Utility class for validation.
+     * @param userRepository  Repository to handle user data.
+     * @param synchroConfig   Configuration for synchronization.
+     * @param roleRepository  Repository to handle role data.
+     * @param eventRepository Repository to handle event data.
+     * @param checkRepository Repository to handle check-in/check-out data.
+     */
     public InformationService(MotdRepository motdRepository, ValidationUtil validationUtil, UserRepository userRepository, SynchroConfig synchroConfig, RoleRepository roleRepository, EventRepository eventRepository, EventTypeRepository eventTypeRepository, CheckRepository checkRepository) {
         this.motdRepository = motdRepository;
         this.validationUtil = validationUtil;
@@ -37,6 +48,12 @@ public class InformationService {
         this.checkRepository = checkRepository;
     }
 
+    /**
+     * Queries the summary of users' event and check-in data for a given month.
+     *
+     * @param month The month for which the summary is being queried.
+     * @return A SummaryResponse object containing the calculated and checked-in times for each user.
+     */
     public SummaryResponse querySummary(LocalDate month) {
         List<UserValueResponseEntity> responseObjects = new ArrayList<>();
         List<EventEntity> events = eventRepository.findAllByMonthAndYear(month.getMonthValue(), month.getYear());
@@ -44,6 +61,8 @@ public class InformationService {
         List<UserEntity> users = userRepository.findUserEntitiesByEnabled(true);
         DecimalFormat df = new DecimalFormat("0.0");
         df.setRoundingMode(RoundingMode.DOWN);
+
+        // Loop over all users to calculate their event and check-in durations
         for (UserEntity user : users) {
             float calculated = events.stream().filter(e -> e.getUser().equals(user)).map(e -> Duration.between(e.getTimeStart().toLocalDateTime(), e.getTimeEnd().toLocalDateTime()).toMinutes()).mapToLong(Long::longValue).sum();
             float checked = checkEntities.stream().filter(c -> c.getUser().equals(user) && c.getCheckOut() != null).map(c -> Duration.between(c.getCheckIn().toLocalDateTime(), c.getCheckOut().toLocalDateTime()).toMinutes()).mapToLong(Long::longValue).sum();
@@ -52,21 +71,42 @@ public class InformationService {
         return new SummaryResponse(responseObjects);
     }
 
+    /**
+     * Queries system information like active users, event types, and roles.
+     *
+     * @return InfoResponse containing users, event types, and roles.
+     */
     public InfoResponse queryInfo() {
         List<String> users = userRepository.findAll().stream().filter(UserEntity::getEnabled).map(UserEntity::getUsername).toList();
         List<String> roles = roleRepository.findAll().stream().map(RoleEntity::getName).toList();
         return new InfoResponse(users, synchroConfig.getEventTypeList(), roles);
     }
 
+    /**
+     * Retrieves the current Message of the Day (MOTD).
+     *
+     * @return The content of the latest MOTD, or an empty string if no MOTD exists.
+     */
     public String queryMotd() {
         if (motdRepository.findMaxIdEntity().isPresent()) return motdRepository.findMaxIdEntity().get().getContent();
         return "";
     }
 
+    /**
+     * Validates a given Message of the Day (MOTD).
+     *
+     * @param motd The Message of the Day to validate.
+     * @return A valid MOTD string or an empty string if invalid.
+     */
     public String testMotd(String motd) {
         return validationUtil.validateMotd(motd);
     }
 
+    /**
+     * Saves a new Message of the Day (MOTD) after validating it.
+     *
+     * @param motd The Message of the Day to save.
+     */
     @Async
     public void saveMotd(String motd) {
         motd = validationUtil.validateMotd(motd);
