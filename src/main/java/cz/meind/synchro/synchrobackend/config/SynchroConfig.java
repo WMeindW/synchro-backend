@@ -57,6 +57,29 @@ public class SynchroConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(SynchroConfig.class);
 
+    /**
+     * Logs the configuration values for debugging purposes.
+     * This method is automatically called after the bean is constructed and dependencies are injected.
+     * It logs all the configuration properties to facilitate debugging and verification of loaded values.
+     * 
+     * The following properties are logged:
+     * - secureRoute
+     * - combinedRole
+     * - loginPage
+     * - userDashboardPage
+     * - adminRole
+     * - defaultRole
+     * - host
+     * - expirationTime
+     * - adminUsername
+     * - adminPassword
+     * - signupLinkExpires
+     * - secretKey
+     * - eventTypeList
+     * - workPeriod
+     * 
+     * After logging all properties, it logs a success message indicating that the configuration was loaded successfully.
+     */
     @PostConstruct
     private void debug() {
         logger.info("secureRoute: {}", secureRoute);
