@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Test</title>
+</head>
+<body>
+<h2>Upload File</h2>
+<form action="http://localhost:8083/files/upload" method="POST" enctype="multipart/form-data">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br><br>
+
+    <label for="file">Select File:</label>
+    <input type="file" id="file" name="file" required>
+    <br><br>
+
+    <button type="submit">Upload</button>
+</form>
+</body>
+</html>

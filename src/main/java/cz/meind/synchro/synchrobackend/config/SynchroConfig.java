@@ -55,13 +55,19 @@ public class SynchroConfig {
     @Value("#{'${events.synchro.types:SHIFT,VACATION,HOMEOFFICE-SHIFT,SICK-LEAVE}'.split(',')}")
     private List<String> eventTypeList;
 
+    @Value("${files.synchro.max-size.bites:100}")
+    private int maxUserFileSize;
+
+    @Value("${files.synchro.location:src/main/resources/files}")
+    private String userFileLocation;
+
     private static final Logger logger = LoggerFactory.getLogger(SynchroConfig.class);
 
     /**
      * Logs the configuration values for debugging purposes.
      * This method is automatically called after the bean is constructed and dependencies are injected.
      * It logs all the configuration properties to facilitate debugging and verification of loaded values.
-     * 
+     * <p>
      * The following properties are logged:
      * - secureRoute
      * - combinedRole
@@ -77,7 +83,7 @@ public class SynchroConfig {
      * - secretKey
      * - eventTypeList
      * - workPeriod
-     * 
+     * <p>
      * After logging all properties, it logs a success message indicating that the configuration was loaded successfully.
      */
     @PostConstruct
@@ -96,6 +102,8 @@ public class SynchroConfig {
         logger.info("secretKey: {}", secretKey);
         logger.info("eventTypeList: {}", eventTypeList);
         logger.info("workPeriod: {}", workPeriod);
+        logger.info("fileSize: {}", maxUserFileSize);
+        logger.info("fileLocation: {}", userFileLocation);
         logger.info("Configuration loaded successfully.");
     }
 

@@ -34,3 +34,4 @@ build/
 /service.log/
 /src/main/resources/application.properties
 /.mvn/
+/src/main/resources/files/

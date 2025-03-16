@@ -52,6 +52,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<CheckEntity> checks;
 
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<FileEntity> files;
+
     public UserEntity(String username, String password, Boolean enabled, RoleEntity role) {
         this.username = username;
         this.password = password;

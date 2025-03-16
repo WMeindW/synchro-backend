@@ -1,6 +1,5 @@
 package cz.meind.synchro.synchrobackend.database.entities;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,18 +10,18 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "blacklist")
-public class BlacklistJwtEntity {
+@Table(name = "files")
+public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String jwtToken;
+    private String fileName;
 
-    public BlacklistJwtEntity(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
-
-    public BlacklistJwtEntity() {
-    }
+    private Long size;
+    
+    @ManyToOne
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }
