@@ -70,6 +70,17 @@ public class FileService {
         return true;
     }
 
+    public List<FileEntity> queryFiles(String username, HttpServletRequest request) {
+        //if (!hasPermissions(request, username)) return false;
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        return user.map(fileRepository::findFileEntitiesByUser).orElse(null);
+    }
+
+    public byte[] queryFile(String file, String username, HttpServletRequest request) throws IOException {
+        //if (!hasPermissions(request, username)) return false;
+        return Files.readAllBytes(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file));
+    }
+
     /**
      * Checks if the user has the necessary permissions to perform an action on the event.
      *
