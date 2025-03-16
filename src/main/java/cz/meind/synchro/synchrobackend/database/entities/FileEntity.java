@@ -19,9 +19,19 @@ public class FileEntity {
     private String fileName;
 
     private Long size;
-    
+
     @ManyToOne
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public FileEntity(String fileName, Long size, UserEntity user) {
+        this.fileName = fileName;
+        this.size = size;
+        this.user = user;
+    }
+
+    public FileEntity() {
+
+    }
 }

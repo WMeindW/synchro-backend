@@ -51,6 +51,7 @@ public class FileService {
         try {
             Files.createDirectories(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/"));
             Files.write(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file.getOriginalFilename()), file.getBytes(), StandardOpenOption.CREATE_NEW);
+            fileRepository.save(new FileEntity(file.getOriginalFilename(), file.getSize(), userRepository.findByUsername(username).get()));
         } catch (Exception e) {
             return false;
         }
@@ -61,6 +62,7 @@ public class FileService {
         //if (!hasPermissions(request, username)) return false;
         try {
             Files.delete(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file));
+            fileRepository.deleteDistinctByFileName(file);
         } catch (Exception e) {
             System.out.println(e);
             return false;
