@@ -36,4 +36,14 @@ public class FileController extends Controller {
         if (!fileService.uploadFile(file, username, request)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @GetMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam("file") String file, @RequestParam("username") String username, HttpServletRequest request) {
+        /*if (!super.handleApiSecureRequest(request, synchroConfig.getCombinedRole()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+         */
+        if (!fileService.deleteFile(file, username, request)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

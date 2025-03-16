@@ -18,5 +18,21 @@
 
     <button type="submit">Upload</button>
 </form>
+
+<h2>Delete File</h2>
+<form action="http://localhost:8083/files/delete" method="GET">
+    <!-- Username input field -->
+    <label for="username1">Username:</label>
+    <input type="text" id="username1" name="username" required>
+    <br><br>
+
+    <!-- File input field -->
+    <label for="file1">File Path:</label>
+    <input type="text" id="file1" name="file" required>
+    <br><br>
+
+    <!-- Submit button -->
+    <button type="submit">Delete File</button>
+</form>
 </body>
 </html>

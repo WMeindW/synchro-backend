@@ -57,6 +57,17 @@ public class FileService {
         return true;
     }
 
+    public boolean deleteFile(String file, String username, HttpServletRequest request) {
+        //if (!hasPermissions(request, username)) return false;
+        try {
+            Files.delete(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file));
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Checks if the user has the necessary permissions to perform an action on the event.
      *
