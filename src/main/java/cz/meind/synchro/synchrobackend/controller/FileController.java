@@ -1,6 +1,5 @@
 package cz.meind.synchro.synchrobackend.controller;
 
-import cz.meind.synchro.synchrobackend.config.SynchroConfig;
 import cz.meind.synchro.synchrobackend.controller.main.Controller;
 import cz.meind.synchro.synchrobackend.database.entities.FileEntity;
 import cz.meind.synchro.synchrobackend.service.user.FileService;
@@ -17,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/files")
 public class FileController extends Controller {
-    private final SynchroConfig synchroConfig;
     private final FileService fileService;
 
     /**
@@ -25,9 +23,8 @@ public class FileController extends Controller {
      *
      * @param securityService The security service responsible for user authentication and authorization.
      */
-    public FileController(SecurityService securityService, SynchroConfig synchroConfig, FileService fileService) {
+    public FileController(SecurityService securityService, FileService fileService) {
         super(securityService);
-        this.synchroConfig = synchroConfig;
         this.fileService = fileService;
     }
 
