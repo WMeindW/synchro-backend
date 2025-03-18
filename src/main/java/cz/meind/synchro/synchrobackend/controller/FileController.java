@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -67,10 +70,15 @@ public class FileController extends Controller {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + encodeFilename(new String(Base64.getDecoder().decode(file), StandardCharsets.UTF_8)));
             return new ResponseEntity<>(fileService.queryFile(file, username, request), headers, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private String encodeFilename(String filename) {
+        return URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
     }
 }
