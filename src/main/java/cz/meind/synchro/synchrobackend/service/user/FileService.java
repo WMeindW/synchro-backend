@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,12 +48,12 @@ public class FileService {
     }
 
     public boolean uploadFile(MultipartFile file, String username, HttpServletRequest request) {
-        //if (!hasPermissions(request, username)) return false;
+        if (!hasPermissions(request, username)) return false;
         if (!checkFile(file, username)) return false;
         try {
             Files.createDirectories(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/"));
-            Files.write(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file.getOriginalFilename()), file.getBytes(), StandardOpenOption.CREATE_NEW);
-            fileRepository.save(new FileEntity(file.getOriginalFilename(), file.getSize(), userRepository.findByUsername(username).get()));
+            Files.write(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + decodeBase64(file.getOriginalFilename())), file.getBytes(), StandardOpenOption.CREATE_NEW);
+            fileRepository.save(new FileEntity(decodeBase64(file.getOriginalFilename()), file.getSize(), userRepository.findByUsername(username).get()));
         } catch (Exception e) {
             return false;
         }
@@ -59,10 +61,10 @@ public class FileService {
     }
 
     public boolean deleteFile(String file, String username, HttpServletRequest request) {
-        //if (!hasPermissions(request, username)) return false;
+        if (!hasPermissions(request, username)) return false;
         try {
-            Files.delete(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file));
-            fileRepository.deleteDistinctByFileName(file);
+            Files.delete(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + decodeBase64(file)));
+            fileRepository.deleteDistinctByFileName(decodeBase64(file));
         } catch (Exception e) {
             System.out.println(e);
             return false;
@@ -71,14 +73,14 @@ public class FileService {
     }
 
     public List<FileEntity> queryFiles(String username, HttpServletRequest request) {
-        //if (!hasPermissions(request, username)) return false;
+        if (!hasPermissions(request, username)) return null;
         Optional<UserEntity> user = userRepository.findByUsername(username);
         return user.map(fileRepository::findFileEntitiesByUser).orElse(null);
     }
 
     public byte[] queryFile(String file, String username, HttpServletRequest request) throws IOException {
-        //if (!hasPermissions(request, username)) return false;
-        return Files.readAllBytes(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file));
+        if (!hasPermissions(request, username)) throw new IllegalAccessError("Access denied");
+        return Files.readAllBytes(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + decodeBase64(file)));
     }
 
     /**
@@ -101,5 +103,10 @@ public class FileService {
         List<FileEntity> userFiles = fileRepository.findFileEntitiesByUser(user.get());
         long totalSize = userFiles.stream().mapToLong(FileEntity::getSize).sum();
         return (totalSize + file.getSize()) <= synchroConfig.getMaxUserFileSize();
+    }
+
+    private String decodeBase64(String encodedText) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedText);
+        return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 }
