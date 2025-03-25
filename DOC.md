@@ -22,10 +22,70 @@
 - vhodné pro subjekty s počtem zaměstnanců menším než **50**
 - software je modulární a dovoluje snadné rozšíření o další moduly
 
+## Prerequisites
+
+- java 17+
+- relační databáze (specifikovaná v konfiguraci)
+- nginx/apache
+
+## Configuration
+
+- ukázková konfigurace:
+
+```properties
+server.port=8083
+spring.jpa.properties.hibernate.cache.use_second_level_cache=true
+spring.jpa.properties.hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+logging.level.org.hibernate.cache=DEBUG
+logging.level.net.sf.ehcache=DEBUG
+logging.level.org.ehcache=DEBUG
+logging.file.path=service.log
+logging.level.web=DEBUG
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://localhost:3306/synchro
+spring.datasource.username=root
+spring.datasource.password=[passwd]
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+spring.jpa.open-in-view=true
+security.jwt.secret-key=e03544f497f3138a7283f5f1e65b704afa65eb39346c08bb92706b0db3625d4f
+security.jwt.expiration-time=3600000
+security.jwt.default-role=USER
+security.jwt.admin-role=ADMIN
+security.jwt.combined-role=ADMIN/USER
+security.jwt.admin-password=[passwd]
+security.jwt.admin-username=admin_user
+security.jwt.secure-route=src/main/resources/secure
+security.jwt.signup-link-expires=36000000
+security.jwt.host-address=http://localhost:8083/
+security.jwt.login-page=/auth/login.html
+security.jwt.user-dashboard-page=/user/index.html
+events.synchro.types=SHIFT,VACATION,HOME-OFFICE-SHIFT,SICK-LEAVE
+attendance.synchro.type=WORK
+files.synchro.location=src/main/resources/files
+files.synchro.max-size.bites=100000000
+spring.servlet.multipart.max-file-size=100MB
+spring.servlet.multipart.max-request-size=100MB
+```
+
+## Deployment
+
+- nasazení je velice jednoduché
+- stačí přetáhnout požadované soubory, nastavit nginx a zapnout backend
+- základní cesta na backend je `/synchro/api/`
+- základní cesta k statickým souborům je `/synchro/`
+- software vyžaduje doménu s platným https certifikátem
+
+## Economics
+
+- software je `open-source` v čistě vzdělávacím scénáři
+- lze použít na trhu
 
 ## License
 
-Copyright 2025 Daniel Linda
+Copyright 2025 [Daniel Linda](https://daniellinda.net/linktree/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the “Software”), to deal in the Software without restriction, including without limitation the
