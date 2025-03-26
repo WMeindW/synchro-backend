@@ -16,6 +16,14 @@
 - [Synchro](https://daniellinda.net)
     - [Login](https://daniellinda.net/synchro/api/auth/index.html)
 
+- [Contact](https://daniellinda.net/linktree/)
+
+## Contribute
+
+- contribute at:
+    - [Backend](https://github.com/WMeindW/synchro-backend)
+    - [Backend](https://github.com/WMeindW/synchro-react)
+
 ## Employee management software
 
 - free opensource software pro malé a začínající podniky
@@ -27,6 +35,19 @@
 - java 17+
 - relační databáze (specifikovaná v konfiguraci)
 - nginx/apache
+
+## Deployment
+
+- nasazení je velice jednoduché
+- stačí přetáhnout požadované soubory, nastavit nginx a zapnout backend
+- základní cesta na backend je `/synchro/api/`
+- základní cesta k statickým souborům je `/synchro/`
+- software vyžaduje doménu s platným https certifikátem
+
+## Economics
+
+- software je `open-source` v čistě vzdělávacím scénáři
+- lze použít na trhu
 
 ## Configuration
 
@@ -69,19 +90,6 @@ files.synchro.max-size.bites=100000000
 spring.servlet.multipart.max-file-size=100MB
 spring.servlet.multipart.max-request-size=100MB
 ```
-
-## Deployment
-
-- nasazení je velice jednoduché
-- stačí přetáhnout požadované soubory, nastavit nginx a zapnout backend
-- základní cesta na backend je `/synchro/api/`
-- základní cesta k statickým souborům je `/synchro/`
-- software vyžaduje doménu s platným https certifikátem
-
-## Economics
-
-- software je `open-source` v čistě vzdělávacím scénáři
-- lze použít na trhu
 
 ## License
 
