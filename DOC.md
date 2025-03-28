@@ -12,6 +12,12 @@
     - stručné statistiky docházky a plánů zaměstnanců
     - vlastní uložiště souborů pro každého uživatele
 
+## Annotation
+
+- Modulární a flexibilní program pro sprábu zaměstnanců malých subjektů. Tento software je navržen pro jednoduchou práci
+  zaměstnavatelů i zaměstnanců. Každý podnik si může svojí verzi upravit přesně pro svoje potřeby s minimální znalostí
+  programování. Odebírání i přidávání modulů je extrémně jednoduché.
+
 ---
 
 - Workflow je verzovaný na GitHub repozitářích.
