@@ -11,6 +11,22 @@
     - stručné statistiky docházky a plánů zaměstnanců
     - vlastní uložiště souborů pro každého uživatele
 
+---
+
+- Workflow je verzovaný na GitHub repozitářích.
+  Jako backend framework jsem zvolil **Spring-Boot**, jako nejlepší enterprise řešení mých problémů.
+  Díky potřebě rychle měnících se stavů a hodnot na frontend prostředí byl zvolen **React**, jelikož se jedná o
+  nejvhodnější framework pro tyto parametry.
+
+---
+
+- Postup na projektu začal v říjnu po extenzivním plánování. Před začátkem veškeré práce, jsem vytvořil návrhy, palety
+  barev a diagramy workflow celého programu. První byl napsán celý backend a funkčnosti s malým lightweight ui v reactu
+  na testování. Velký problém nastal při výběru knihoven pro zobrazování složitějších dat, jako jsou statistiky a
+  události, jelikož bylo nutné přizpůsobit formát dat pro tyto závislosti. Prošel jsem několika pokusy o integraci
+  externích knihoven a až pátý splňoval mé požadavky. Tento proces zabral spoustu času mého jednočleného týmu.
+  Další zádrhely přišly při testování a odstraňování chyb, zejména těch skrytých ovlivňujících pouze user experience.
+
 ## Links
 
 - [Synchro](https://daniellinda.net)
