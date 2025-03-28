@@ -1,5 +1,6 @@
 # Synchro
 
+- název: Synchro
 - verze 0.86
 - moduly:
     - správa a vytváření zaměstnanců
@@ -25,7 +26,20 @@
   na testování. Velký problém nastal při výběru knihoven pro zobrazování složitějších dat, jako jsou statistiky a
   události, jelikož bylo nutné přizpůsobit formát dat pro tyto závislosti. Prošel jsem několika pokusy o integraci
   externích knihoven a až pátý splňoval mé požadavky. Tento proces zabral spoustu času mého jednočleného týmu.
-  Další zádrhely přišly při testování a odstraňování chyb, zejména těch skrytých ovlivňujících pouze user experience.
+  Další zádrhely přišly při testování a odstraňování chyb, zejména těch skrytých ovlivňujících zejména user experience.
+
+---
+
+- Tento projekt není výdělečný a jedná se jen a pouze o studentskou práci. Cena tohoto projektu se dá počítat v
+  zaplacených technologiich a tzv. `Man-Hour`. Pro tuto práci byl potřeba development server, který zřizuje nasazení
+  databáze, java runtime a nginx reverse-proxy. Nakonec jsem se rozhodl využít služeb **Oracle development cloud**. Tato
+  služba mi poskytuje Linux prostředí v podobě vzdáleného serveru. Zde jsem využil svoje *supreme* schopnosti s *Linux
+  OS* a nastavil celé prostředí pro runtime Javy, MySQL, Nginx a konfigurace *https* certifikátů a autorit.
+
+## Competition
+
+- existuje přímá konkurence v podobě aplikace **Tamigo**
+- toto nneí důležité, jelikož tato aplikace je open-source a přehlednější na používání pro bězného uživatele
 
 ## Links
 
@@ -38,7 +52,7 @@
 
 - contribute at:
     - [Backend](https://github.com/WMeindW/synchro-backend)
-    - [Backend](https://github.com/WMeindW/synchro-react)
+    - [Frontend](https://github.com/WMeindW/synchro-react)
 
 ## Employee management software
 
