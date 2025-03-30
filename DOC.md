@@ -18,7 +18,7 @@
   zaměstnavatelů i zaměstnanců. Každý podnik si může svojí verzi upravit přesně pro svoje potřeby s minimální znalostí
   programování. Odebírání i přidávání modulů je extrémně jednoduché.
 
----
+## Development
 
 - Workflow je verzovaný na GitHub repozitářích.
   Jako backend framework jsem zvolil **Spring-Boot**, jako nejlepší enterprise řešení mých problémů.
