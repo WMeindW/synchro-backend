@@ -14,9 +14,10 @@
 
 ## Annotation
 
-- Modulární a flexibilní program pro sprábu zaměstnanců malých subjektů. Tento software je navržen pro jednoduchou práci
-  zaměstnavatelů i zaměstnanců. Každý podnik si může svojí verzi upravit přesně pro svoje potřeby s minimální znalostí
-  programování. Odebírání i přidávání modulů je extrémně jednoduché.
+- Modulární a flexibilní program pro správu zaměstnanců malých subjektů včetně jednoduchých statistik. Tento software je
+  navržen pro jednoduchou práci a orientaci.
+  Každý podnik si může svojí verzi upravit přesně pro svoje potřeby s minimální znalostí programování. Důraz na
+  modularitu a jednoduchou konfiguraci.
 
 ## Development
 
@@ -41,6 +42,16 @@
   databáze, java runtime a nginx reverse-proxy. Nakonec jsem se rozhodl využít služeb **Oracle development cloud**. Tato
   služba mi poskytuje Linux prostředí v podobě vzdáleného serveru. Zde jsem využil svoje *supreme* schopnosti s *Linux
   OS* a nastavil celé prostředí pro runtime Javy, MySQL, Nginx a konfigurace *https* certifikátů a autorit.
+
+## Testing
+
+- Login
+- Signup
+- Logout
+- Create Event/User
+- Edit Event/User
+- Delete Event/User
+- Motd sanitation
 
 ## Competition
 
