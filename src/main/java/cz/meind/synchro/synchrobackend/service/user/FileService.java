@@ -80,7 +80,7 @@ public class FileService {
 
     public byte[] queryFile(String file, String username, HttpServletRequest request) throws IOException {
         if (!hasPermissions(request, username)) throw new IllegalAccessError("Access denied");
-        return Files.readAllBytes(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + decodeBase64(file)));
+        return Files.readAllBytes(Path.of(synchroConfig.getUserFileLocation() + "/" + username + "/" + file));
     }
 
     /**

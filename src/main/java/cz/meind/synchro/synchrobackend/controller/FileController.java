@@ -68,9 +68,10 @@ public class FileController extends Controller {
         if (!super.handleApiSecureRequest(request, synchroConfig.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
+            System.out.println("Files");
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + encodeFilename(new String(Base64.getDecoder().decode(file), StandardCharsets.UTF_8)));
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file);
             return new ResponseEntity<>(fileService.queryFile(file, username, request), headers, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

@@ -97,6 +97,7 @@ public class AuthenticationService {
      */
     public boolean signup(RegisterUserDto registerUserDto) {
         if (!validationUtil.signupCheck(registerUserDto.getUsername())) return false;
+        if (jwtUtil.extractClaims(registerUserDto.getToken()) == null) return false;
         if (!registerUserDto.getUsername().equals(jwtUtil.extractClaims(registerUserDto.getToken()).getSubject()))
             return false;
         userRepository.updateUserEnabledAndPasswordByUsername(registerUserDto.getUsername(), true, validationUtil.hashPassword(registerUserDto.getPassword()));
