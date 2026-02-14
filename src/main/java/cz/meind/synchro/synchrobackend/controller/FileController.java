@@ -6,6 +6,7 @@ import cz.meind.synchro.synchrobackend.database.entities.FileEntity;
 import cz.meind.synchro.synchrobackend.service.user.FileService;
 import cz.meind.synchro.synchrobackend.service.user.auth.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -67,10 +69,10 @@ public class FileController extends Controller {
         if (!super.handleApiSecureRequest(request, synchroConfig.getCombinedRole()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
-            System.out.println("Files");
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + decodeBase64(file));
+            System.out.println(file);
             return new ResponseEntity<>(fileService.queryFile(file, username, request), headers, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,5 +82,10 @@ public class FileController extends Controller {
 
     private String encodeFilename(String filename) {
         return URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+    }
+
+    private String decodeBase64(String encodedText) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedText);
+        return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 }

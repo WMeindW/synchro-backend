@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 @Component
 public class Routes {
-    SynchroConfig config;
+    SynchroConfig synchroConfig;
 
     /**
      * Constructs a new Routes object.
@@ -18,7 +18,7 @@ public class Routes {
      * @param config The SynchroConfig object containing configuration settings.
      */
     public Routes(SynchroConfig config) {
-        this.config = config;
+        this.synchroConfig = config;
     }
 
     /**
@@ -30,7 +30,7 @@ public class Routes {
      */
     public byte[] getFile(HttpServletRequest request) {
         try {
-            return Files.readAllBytes(Path.of(config.getSecureRoute() + request.getRequestURI()));
+            return Files.readAllBytes(Path.of(synchroConfig.getSecureRoute() + request.getRequestURI()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
